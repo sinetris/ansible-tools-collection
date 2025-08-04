@@ -1,0 +1,87 @@
+---
+repos:
+  - repo: https://github.com/ansible-network/collection_prep
+    rev: 1.1.2
+    hooks:
+      - id: update-docs
+        pass_filenames: false
+        args:
+          - -p
+          - .
+          - --link-collection
+  - repo: https://github.com/ansible/ansible-lint
+    rev: v25.7.0
+    hooks:
+      - id: ansible-lint
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      # Git style
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: check-merge-conflict
+      - id: check-vcs-permalinks
+      - id: forbid-new-submodules
+      - id: no-commit-to-branch
+        args: [--branch, main]
+      - id: detect-private-key
+      # Common errors
+      - id: check-symlinks
+      - id: debug-statements
+      - id: end-of-file-fixer
+        exclude_types:
+          - svg
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+        exclude: CHANGELOG.md
+      # Exclude 'check-executables-have-shebangs'
+      # Broken on Docker for Mac
+      - id: check-executables-have-shebangs
+      # Cross platform
+      - id: check-case-conflict
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      # Security
+      - id: detect-aws-credentials
+        args: ['--allow-missing-credentials']
+      - id: detect-private-key
+      # Linters and Formatters
+      - id: check-yaml
+      - id: check-json
+      - id: pretty-format-json
+        args: ['--autofix', '--no-sort-keys']
+  - repo: https://github.com/asottile/add-trailing-comma
+    rev: v3.2.0
+    hooks:
+      - id: add-trailing-comma
+  # Markdown/CommonMark Linter
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.45.0
+    hooks:
+      - id: markdownlint
+        exclude: ^(CHANGELOG\.md)$
+  # YAML Formatter
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.17.2
+    hooks:
+      - id: yamlfmt
+        # Exclude generated files
+        exclude: |
+          (?x)^(
+            changelogs\/\.plugin-cache\.yaml|
+            changelogs\/changelog\.yaml
+          )$
+  - repo: https://github.com/PyCQA/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+        name: Sort import statements using isort
+        args: ["--filter-files"]
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.3.0
+    hooks:
+      - id: flake8

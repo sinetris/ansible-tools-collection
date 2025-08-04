@@ -1,0 +1,40 @@
+{
+  "name": "sinetris.tools-dev-container",
+  "build": {
+    "dockerfile": "assets/Dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=${containerWorkspaceFolder},type=bind",
+  "remoteUser": "vscode",
+  "runArgs": [
+    "--security-opt",
+    "seccomp=unconfined",
+    "--security-opt",
+    "label=disable",
+    "--cap-add=SYS_ADMIN",
+    "--cap-add=SYS_RESOURCE",
+    "--device",
+    "/dev/fuse",
+    "--security-opt",
+    "apparmor=unconfined",
+    "--hostname=ansible-dev-container"
+  ],
+  "updateRemoteUserUID": true,
+  "containerEnv": {
+    "PROJECT_WORKDIR": "${containerWorkspaceFolder}"
+  },
+  "postCreateCommand": [
+    "/bin/sh",
+    "-c",
+    "${containerWorkspaceFolder}/.devcontainer/assets/postCreateCommand.sh"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "redhat.ansible",
+        "yzhang.markdown-all-in-one"
+      ]
+    }
+  }
+}

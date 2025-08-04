@@ -1,0 +1,6 @@
+-r test-requirements.txt
+
+pre-commit
+ansible-dev-tools
+collection_prep @ git+https://github.com/ansible-network/collection_prep.git
+antsibull-changelog

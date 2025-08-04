@@ -1,0 +1,33 @@
+---
+extends: default
+
+rules:
+  braces:
+    max-spaces-inside: 1
+    level: error
+  brackets:
+    max-spaces-inside: 1
+    level: error
+  colons:
+    max-spaces-after: -1
+    level: error
+  commas:
+    max-spaces-after: -1
+    level: error
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: false
+  document-start: enable
+  empty-lines:
+    max: 2
+    level: error
+  indentation:
+    spaces: 2
+    indent-sequences: true
+  line-length:
+    max: 160
+  new-lines:
+    type: unix
+  octal-values:
+    forbid-implicit-octal: false
+    forbid-explicit-octal: false
