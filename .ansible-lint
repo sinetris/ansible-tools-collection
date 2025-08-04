@@ -1,0 +1,30 @@
+---
+# .ansible-lint
+
+# Run 'ansible-lint -P' to list all profiles
+profile: production
+exclude_paths:
+  - .cache/
+  - changelogs/.plugin-cache.yaml
+  - changelogs/changelog.yaml
+# Enable checking of loop variable prefixes in roles
+loop_var_prefix: "^(__|{role}_)"
+# Enforce variable names to follow pattern below, in addition to Ansible own
+# requirements, like avoiding python identifiers. To disable add `var-naming`
+# to skip_list.
+var_naming_pattern: "^[a-z_][a-z0-9_]*$"
+use_default_rules: true
+enable_list:
+  # Do not skip yaml checks when yamllint is missing
+  - yaml
+  # Validate task arguments
+  - args
+  # opt-in rules
+  - empty-string-compare
+  - no-log-password
+  - no-same-owner
+  # - name[prefix]
+skip_list:
+  - "no-handler"
+  - "package-latest"
+  - var-naming[no-role-prefix]
