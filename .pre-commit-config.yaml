@@ -1,4 +1,8 @@
 ---
+ci:
+  autoupdate_schedule: monthly
+  skip:
+    - ansible-lint
 repos:
   - repo: https://github.com/ansible-network/collection_prep
     rev: 1.1.2
