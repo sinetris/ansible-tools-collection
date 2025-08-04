@@ -28,4 +28,3 @@ skip_list:
   - "no-handler"
   - "package-latest"
   - var-naming[no-role-prefix]
-offline: true
