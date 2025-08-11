@@ -1,4 +1,0 @@
----
-add object.role:
-  - name: pki
-    description: A role to generate a PKIs.

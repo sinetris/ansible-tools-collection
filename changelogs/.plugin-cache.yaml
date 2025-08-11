@@ -1,0 +1,23 @@
+objects:
+  role:
+    pki:
+      description: Role to create PKIs.
+      name: pki
+      version_added: null
+plugins:
+  become: {}
+  cache: {}
+  callback: {}
+  cliconf: {}
+  connection: {}
+  filter: {}
+  httpapi: {}
+  inventory: {}
+  lookup: {}
+  module: {}
+  netconf: {}
+  shell: {}
+  strategy: {}
+  test: {}
+  vars: {}
+version: 0.1.0
