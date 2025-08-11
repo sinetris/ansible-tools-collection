@@ -1,0 +1,213 @@
+########
+# The first section is referred to as the default section, and spans from the start
+# of file until the first named [ section ].
+
+# Setting 'config_diagnostics' is useful for diagnosing misconfigurations
+config_diagnostics = 1
+
+########
+# Environment variables can be referred to using $ENV::VARIABLE_NAME
+# It's better to have defaults to avoid errors on missing variables.
+
+PKI_CA_NAME               = example-ca
+PKI_CA_DATA_DIR           = .
+PKI_CA_BASE_DOMAIN        = demo-corp.test
+PKI_CA_DN_COUNTRY         = "US"
+PKI_CA_DN_ORG_NAME        = "DemoCorp"
+PKI_CA_DN_COMMON_NAME     = "$ENV::PKI_CA_DN_ORG_NAME Example CA"
+PKI_CA_CONSTRAINT_FILE    = section.name_constraints.cnf
+
+########
+# The names (e.g, ca, dir, base_domain) can be referred to from
+# the entire configuration file using $name or ${name} (e.g, $ca).
+
+ca                        = $ENV::PKI_CA_NAME
+dir                       = $ENV::PKI_CA_DATA_DIR
+base_domain               = $ENV::PKI_CA_BASE_DOMAIN
+aia_url                   = http://$ca.ca.$base_domain/$ca.crt
+crl_url                   = http://$ca.ca.$base_domain/$ca.crl
+ocsp_url                  = http://$ca.ocsp.$base_domain:9080
+default_ca                = ca_default
+
+[ policy_strict ]
+countryName               = supplied
+stateOrProvinceName       = optional
+localityName              = optional
+organizationName          = match
+organizationalUnitName    = optional
+commonName                = supplied
+emailAddress              = optional
+
+[ policy_loose ]
+countryName               = supplied
+stateOrProvinceName       = optional
+localityName              = optional
+organizationName          = supplied
+organizationalUnitName    = optional
+commonName                = supplied
+emailAddress              = optional
+
+########################################################
+# Configurations used by the 'openssl req' command.
+
+#### Request config sections ####
+# Use with '-section' option (default "req")
+
+[ req ]
+.include section.req.cnf
+distinguished_name        = req_distinguished_name
+req_extensions            = req_ext
+attributes                = req_attributes
+
+[ req_ca ]
+.include section.req.cnf
+distinguished_name        = req_ca_distinguished_name
+req_extensions            = req_ca_ext
+
+#### distinguished_name sections
+# Included from 'Request config sections'
+
+[ req_distinguished_name ]
+countryName_max           = Country Name (2 letter code)
+countryName_min           = 2
+countryName_max           = 2
+stateOrProvinceName       = State or Province Name (full name)
+localityName              = Locality Name (eg, city)
+0.organizationName        = Organization Name (eg, company)
+organizationalUnitName    = Organizational Unit Name (eg, section)
+commonName                = Common Name (eg, fully qualified host name)
+commonName_max            = 64
+emailAddress              = Email Address
+emailAddress_max          = 64
+
+[ req_attributes ]
+challengePassword         = A challenge password
+challengePassword_min     = 4
+challengePassword_max     = 20
+
+[ req_ca_distinguished_name ]
+countryName               = $ENV::PKI_CA_DN_COUNTRY
+organizationName          = $ENV::PKI_CA_DN_ORG_NAME
+commonName                = $ENV::PKI_CA_DN_COMMON_NAME
+
+#### Request extension sections ####
+# Use with '-reqexts' option
+# (to overrides 'req_extensions' from 'Request config sections')
+
+[ req_ext ]
+basicConstraints          = CA:FALSE
+keyUsage                  = critical, nonRepudiation, digitalSignature, keyEncipherment
+subjectKeyIdentifier      = hash
+
+####
+# CA Request
+
+[ req_ca_ext ]
+basicConstraints          = critical, CA:TRUE
+keyUsage                  = critical, keyCertSign, cRLSign
+subjectKeyIdentifier      = hash
+
+####
+# req for leafs
+
+########################################################
+# Configuration for 'openssl ca' command
+
+########
+# CA definitions (use with '-name' option)
+
+[ ca_default ]
+.include section.ca_default.cnf
+
+[ root_ca_definition ]
+.include section.ca_default.cnf
+default_days              = 3652
+default_crl_days          = 365
+
+########
+# Extensions (use with '-extensions' option)
+
+[ ca_ext ]
+basicConstraints          = critical, CA:TRUE
+keyUsage                  = critical, keyCertSign, cRLSign
+subjectKeyIdentifier      = hash
+
+[ signing_ca_req_ext ]
+basicConstraints          = critical, CA:TRUE, pathlen:0
+keyUsage                  = critical, keyCertSign, cRLSign
+subjectKeyIdentifier      = hash
+
+[ intermediate_ca_ext ]
+authorityInfoAccess       = @issuer_info
+authorityKeyIdentifier    = keyid:always
+basicConstraints          = critical, CA:TRUE
+crlDistributionPoints     = @crl_info
+extendedKeyUsage          = clientAuth, serverAuth
+keyUsage                  = critical, keyCertSign, cRLSign
+nameConstraints           = @name_constraints
+subjectKeyIdentifier      = hash
+
+# Extensions
+
+[ server_ext ]
+keyUsage                  = critical, digitalSignature, keyEncipherment
+basicConstraints          = CA:FALSE
+extendedKeyUsage          = serverAuth, clientAuth
+subjectKeyIdentifier      = hash
+authorityKeyIdentifier    = keyid:always
+authorityInfoAccess       = @ocsp_info
+crlDistributionPoints     = @crl_info
+certificatePolicies       = blueMediumAssurance
+
+[ client_ext ]
+keyUsage                  = critical,digitalSignature
+basicConstraints          = CA:FALSE
+extendedKeyUsage          = clientAuth
+subjectKeyIdentifier      = hash
+authorityKeyIdentifier    = keyid:always
+authorityInfoAccess       = @ocsp_info
+crlDistributionPoints     = @crl_info
+certificatePolicies       = blueMediumAssurance
+
+[ timestamp_ext ]
+keyUsage                  = critical,digitalSignature,nonRepudiation
+basicConstraints          = CA:FALSE
+extendedKeyUsage          = critical,timeStamping
+subjectKeyIdentifier      = hash
+authorityKeyIdentifier    = keyid:always
+authorityInfoAccess       = @ocsp_info
+crlDistributionPoints     = @crl_info
+certificatePolicies       = blueTimeStamping
+
+[ ocspsign_ext ]
+keyUsage                  = critical, digitalSignature
+basicConstraints          = CA:FALSE
+extendedKeyUsage          = critical, OCSPSigning
+subjectKeyIdentifier      = hash
+authorityKeyIdentifier    = keyid:always
+authorityInfoAccess       = @issuer_info
+noCheck                   = true
+
+[ ocsp_ext ]
+authorityKeyIdentifier    = keyid:always
+basicConstraints          = critical, CA:FALSE
+extendedKeyUsage          = OCSPSigning
+keyUsage                  = critical, digitalSignature
+subjectKeyIdentifier      = hash
+
+[ crl_ext ]
+authorityKeyIdentifier    = keyid:always
+authorityInfoAccess       = @issuer_info
+
+[ crl_info ]
+URI.0                     = $crl_url
+
+[ issuer_info ]
+caIssuers;URI.0           = $aia_url
+
+[ ocsp_info ]
+caIssuers;URI.0           = $aia_url
+OCSP;URI.0                = $ocsp_url
+
+[ name_constraints ]
+.include $ENV::PKI_CA_CONSTRAINT_FILE

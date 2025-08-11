@@ -33,6 +33,6 @@ sections:
     - Known Issues
   - - doc_changes
     - Documentation Changes
-title: "Sinetris Tools Collection"
+title: sinetris.tools
 trivial_section_name: trivial
 use_fqcn: true

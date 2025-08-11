@@ -1,0 +1,73 @@
+---
+# argument spec file for sinetris.tools.pki
+
+argument_specs:
+  main:
+    short_description: Role to create PKIs.
+    options:
+      pki_action:
+        type: str
+        description: |
+          Action to perform
+        required: true
+        choices:
+          - prepare
+          - create-cert
+          - create-ca
+      pki_cert_type:
+        type: str
+        description: Certificate type
+        required: true
+        choices:
+          # Root Certificate
+          - self-signed-cert
+          # CA Certificate
+          - ca-cert
+          # Cross Certificate
+          - cross-cert
+          # Leaf (end-entity) Certificate
+          - leaf-cert
+      pki_ca_type:
+        type: str
+        description: CA type
+        required: true
+        choices:
+          # Root CA
+          - root-ca
+          # Intermediate CA
+          - intermediate-ca
+          # Signing CA
+          - signing-ca
+      pki_project:
+        type: str
+        description: A project name for the PKI
+        required: true
+      pki_ca_identifier:
+        type: str
+        description: Certificate Authority (CA) identifier
+        default: example-ca
+      pki_ca_issuer:
+        type: str
+        description:
+          - Issuer Certificate Authority (CA) identifier
+          - Required when creating Intermediate CA
+      pki_ca_base_dir:
+        type: str
+        description: Base directory used to store PKI related files for the project
+        default: $HOME/.local/pki
+      pki_ca_base_data_dir:
+        type: str
+        description: Directory used to store the project PKI generated files
+        default: "{{ pki_ca_base_dir }}/{{ pki_project }}/ca"
+      pki_config_dir:
+        type: str
+        description: Directory used to store the config files for the PKI project
+        default: "{{ pki_ca_base_dir }}/{{ pki_project }}/.config"
+      pki_dir_owner:
+        type: str
+        description: Name of the user that should own the directory for the PKI project
+        default: "{{ ansible_user }}"
+      pki_dir_group:
+        type: str
+        description: Name of the group that should own the directory for the PKI project
+        default: "{{ ansible_user }}"

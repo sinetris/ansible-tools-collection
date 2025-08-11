@@ -1,0 +1,26 @@
+---
+galaxy_info:
+  author: Duilio Ruggiero
+  description: sinetris.tools.pki - Role to manage PKIs
+  issue_tracker_url: https://github.com/sinetris/ansible-tools-collection/issues?q=label%3Arole%20label%3Apki%20is%3Aissue
+  license: Apache-2.0
+  min_ansible_version: 2.16.0
+  platforms:
+    - name: Alpine
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - bookworm
+        - bullseye
+    - name: Ubuntu
+      versions:
+        - noble
+        - jammy
+  galaxy_tags:
+    - ca
+    - openssl
+    - pki
+    - certificate
+    - ssl
+    - tls

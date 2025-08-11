@@ -1,0 +1,42 @@
+---
+- name: Check that 'pki_cert_type' contains a valid value
+  ansible.builtin.assert:
+    that:
+      - pki_cert_type
+      - pki_cert_type in __pki_valid_cert_types
+    fail_msg: >-
+      Invalid pki_cert_type '{{ pki_cert_type }}'.
+      Must be one of: {{ __pki_valid_cert_types }}.
+    success_msg: >-
+      Valid pki_cert_type: '{{ pki_cert_type }}'
+
+- name: Validate dependencies
+  ansible.builtin.import_tasks: validate/dependencies.yml
+
+- name: Validate CA files structure
+  ansible.builtin.import_tasks: validate/ca-files-structure.yml
+
+- name: Create Certificate Signing Request (CSR) for CA
+  ansible.builtin.command:
+    argv:
+      - openssl
+      - req
+      - -new
+      - -verbose
+      - -nodes
+      - -config
+      - "{{ pki_config_dir }}/openssl.cnf"
+      - -section
+      - ca_req
+      - -reqexts
+      - ca_req_ext
+      - -out
+      - "{{ pki_ca_base_data_dir }}/{{ pki_ca_identifier }}.csr"
+      - -keyout
+      - "{{ pki_ca_base_data_dir }}/private/${pki_ca_identifier}.key"
+    creates: "{{ pki_ca_base_data_dir }}/private/${pki_ca_identifier}.key"
+  when:
+    - pki_cert_type in ['self-signed-cert', 'ca-cert']
+  environment:
+    PKI_CA_NAME: "{{ pki_ca_identifier }}"
+    PKI_CA_DATA_DIR: "{{ pki_ca_base_data_dir }}"

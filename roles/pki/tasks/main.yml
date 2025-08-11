@@ -1,0 +1,7 @@
+---
+- name: Project PKI
+  block:
+    - name: Validate variables
+      ansible.builtin.import_tasks: validate/variables.yml
+    - name: Run task {{ pki_action }}
+      ansible.builtin.include_tasks: actions/{{ pki_action }}.yml

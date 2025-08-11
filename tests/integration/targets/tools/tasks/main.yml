@@ -1,0 +1,8 @@
+---
+- name: Test the tox ansible integration
+  ansible.builtin.set_fact:
+    msg: 'sinetris.tools needs tests'
+- name: Assert that the filter worked
+  ansible.builtin.assert:
+    that:
+      - msg == 'sinetris.tools needs tests'

@@ -1,0 +1,8 @@
+---
+- name: Check OpenSSL version
+  ansible.builtin.command: openssl version
+  register: __openssl_version_result
+  changed_when: false
+  failed_when: >
+    (__openssl_version_result.rc != 0) or
+    ('OpenSSL 3' not in __openssl_version_result.stdout_lines)

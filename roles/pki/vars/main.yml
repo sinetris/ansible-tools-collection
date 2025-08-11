@@ -1,0 +1,26 @@
+---
+# Valid actions for this role
+__pki_valid_actions:
+  - prepare
+  - create-cert
+  - create-ca
+
+__pki_valid_cert_types:
+  # Root Certificate
+  - self-signed-cert
+  # CA Certificate
+  - ca-cert
+  # Cross Certificate
+  - cross-cert
+  # Leaf (end-entity) Certificate
+  - leaf-cert
+
+__pki_valid_ca_types:
+  # Root CA
+  - root-ca
+  # Intermediate CA
+  - intermediate-ca
+  # Signing CA
+  - signing-ca
+
+__pki_identifier_re: ^[a-zA-Z][_0-9a-zA-Z]+$'

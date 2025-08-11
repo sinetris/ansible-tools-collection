@@ -1,0 +1,9 @@
+# [ req ]
+default_bits            = 4096
+encrypt_key             = yes
+default_md              = sha256
+utf8                    = yes
+string_mask             = utf8only
+prompt                  = no
+distinguished_name      = ca_dn
+req_extensions          = req_ext

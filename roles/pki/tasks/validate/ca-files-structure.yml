@@ -1,0 +1,31 @@
+---
+- name: Check if CA sub-directories exists
+  ansible.builtin.stat:
+    path: "{{ __pki_ca_data_dir }}/{{ __pki_ca_subdir }}"
+  loop_control:
+    loop_var: __pki_ca_subdir
+    label: "{{ __pki_ca_subdir }}"
+  loop:
+    - certs
+    - crl
+    - db
+    - private
+  register: __pki_ca_dir_check
+  failed_when: >-
+    not __pki_ca_dir_check.stat.exists
+    or not __pki_ca_dir_check.stat.isdir
+
+- name: Check if CA base files exists
+  ansible.builtin.stat:
+    path: "{{ __pki_ca_base_file }}"
+  loop_control:
+    loop_var: __pki_ca_base_file
+    label: "{{ __pki_ca_base_file }}"
+  loop:
+    - "{{ __pki_ca_db_index_file }}"
+    - "{{ __pki_ca_serial_file }}"
+    - "{{ __pki_ca_crl_file }}"
+  register: __pki_ca_base_file_check
+  failed_when: >-
+    not __pki_ca_dbindex_check.stat.exists
+    or not __pki_ca_dbindex_check.stat.isreg
