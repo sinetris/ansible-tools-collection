@@ -74,7 +74,7 @@ for more details.
 ## Release notes
 
 See the
-[changelog](https://github.com/ansible-collections/sinetris.tools/tree/main/CHANGELOG.rst).
+[changelog](https://github.com/sinetris/ansible-tools-collection/tree/main/CHANGELOG.md).
 
 ## Roadmap
 
