@@ -8,16 +8,6 @@
   "workspaceMount": "source=${localWorkspaceFolder},target=${containerWorkspaceFolder},type=bind",
   "remoteUser": "vscode",
   "runArgs": [
-    "--security-opt",
-    "seccomp=unconfined",
-    "--security-opt",
-    "label=disable",
-    "--cap-add=SYS_ADMIN",
-    "--cap-add=SYS_RESOURCE",
-    "--device",
-    "/dev/fuse",
-    "--security-opt",
-    "apparmor=unconfined",
     "--hostname=ansible-dev-container"
   ],
   "updateRemoteUserUID": true,
@@ -33,8 +23,32 @@
     "vscode": {
       "extensions": [
         "redhat.ansible",
+        "ms-python.flake8",
+        "ms-python.pylint",
+        "ms-python.python",
+        "ms-python.pylint",
+        "takumii.markdowntable",
+        "vscode-icons-team.vscode-icons",
         "yzhang.markdown-all-in-one"
-      ]
+      ],
+      "settings": {
+        "editor.tabSize": 4,
+        "terminal.integrated.fontFamily": "'MesloLGM NF', '0xProto Nerd Font', monospace",
+        "terminal.integrated.fontLigatures.enabled": true,
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/bin/zsh",
+            "icon": "terminal-ubuntu"
+          }
+        },
+        "workbench.iconTheme": "vscode-icons"
+      }
     }
+  },
+  "features": {
+    "ghcr.io/jungaretti/features/make:1": {},
+    "ghcr.io/devcontainers-extra/features/shellcheck:1": {},
+    "ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {}
   }
 }

@@ -1,0 +1,6 @@
+---
+- name: Ensure dependencies are installed
+  ansible.builtin.import_tasks: ensure/dependencies.yml
+
+- name: Ensure proper pki data structure
+  ansible.builtin.import_tasks: ensure/ca-files-structure.yml

@@ -1,0 +1,17 @@
+---
+- name: Check that 'pki_action' contains a valid value
+  ansible.builtin.assert:
+    that:
+      - pki_action in __pki_valid_actions
+    fail_msg: "Invalid pki_action '{{ pki_action }}'. Must be one of: {{ __pki_valid_actions }}."
+    success_msg: "Valid pki_action: '{{ pki_action }}'"
+
+- name: Set variables for pki data structure
+  check_mode: false
+  ansible.builtin.set_fact:
+    __pki_ca_data_dir: "{{ pki_ca_base_data_dir }}/{{ pki_ca_identifier }}"
+    __pki_ca_db_index_file: "{{ __pki_ca_data_dir }}/db/index.db"
+    __pki_ca_serial_file: "{{ __pki_ca_data_dir }}/db/serial"
+    __pki_ca_crl_file: "{{ __pki_ca_data_dir }}/db/crlnumber"
+  when:
+    - pki_ca_identifier

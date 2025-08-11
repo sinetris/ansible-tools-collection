@@ -19,7 +19,7 @@ This repository contains the `sinetris.tools` Ansible Collection.
 <!--start requires_ansible-->
 ## Ansible version compatibility
 
-This collection has been tested against the following Ansible versions: **>=2.15.0**.
+This collection has been tested against the following Ansible versions: **>=2.16.0**.
 
 Plugins and modules within a collection may be tested with only specific Ansible versions.
 A collection may contain metadata that identifies these versions.
@@ -95,10 +95,12 @@ Requirements:
 
 - [Docker][docker-setup]
 
-> **NOTE:** If you are on macOS, is more convenient to install Docker in [Colima][colima]
+> **NOTE:** If you are on macOS, is more convenient to install Docker in [Colima](#install-colima-on-mac).
 > instead of using [Docker Desktop for Mac][docker-mac].
 
 #### Install Colima on Mac
+
+To use Docker in [Colima][colima] on macOS, you also need to install the related docker client CLIs.
 
 ```sh
 brew install docker docker-compose docker-buildx

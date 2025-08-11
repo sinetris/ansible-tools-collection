@@ -1,0 +1,68 @@
+---
+- name: Create CA sub-directories
+  ansible.builtin.file:
+    path: "{{ __pki_ca_data_dir }}/{{ __pki_ca_subdir }}"
+    state: directory
+    mode: "{{ __pki_ca_subdir.mode | default('750') }}"
+  loop_control:
+    loop_var: __pki_ca_subdir
+    label: "{{ __pki_ca_subdir.path }}"
+  loop:
+    - path: certs
+    - path: crl
+    - path: db
+    - path: private
+      mode: "700"
+  when:
+    - pki_cert_type in ['self-signed-cert', 'ca-cert']
+
+- name: Create CA DB index file if doesn't exists
+  ansible.builtin.file:
+    path: "{{ __pki_ca_db_index_file }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    access_time: preserve
+    modification_time: preserve
+    mode: '0640'
+    state: touch
+  when:
+    - pki_cert_type in ['self-signed-cert', 'ca-cert']
+
+- name: Check if CA serial number file exist
+  ansible.builtin.stat:
+    path: "{{ __pki_ca_serial_file }}"
+  register: __pki_ca_serial_check
+
+- name: Create random value for CA serial number file
+  check_mode: false
+  ansible.builtin.set_fact:
+    __pki_ca_serial_number: "{{ lookup('pipe', 'echo $(openssl rand -hex 8)') }}"
+  when:
+    - not __pki_ca_serial_check.stat.exists
+
+- name: Create CA serial number file
+  ansible.builtin.copy:
+    content: |
+      {{ __pki_ca_serial_number }}
+    dest: "{{ __pki_ca_serial_file }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0640'
+  when:
+    - not __pki_ca_serial_check.stat.exists
+
+- name: Check if CA CRL number file exist
+  ansible.builtin.stat:
+    path: "{{ __pki_ca_crl_file }}"
+  register: __pki_ca_crl_check
+
+- name: Create CA CRL number file
+  ansible.builtin.copy:
+    content: |
+      1001
+    dest: "{{ __pki_ca_crl_file }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0640'
+  when:
+    - not __pki_ca_crl_check.stat.exists

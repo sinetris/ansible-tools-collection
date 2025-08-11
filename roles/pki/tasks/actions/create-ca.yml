@@ -1,0 +1,100 @@
+---
+- name: Check that 'pki_ca_type' contains a valid value
+  ansible.builtin.assert:
+    that:
+      - pki_ca_type in __pki_valid_ca_types
+    fail_msg: "Invalid pki_ca_type '{{ pki_ca_type }}'. Must be one of: {{ __pki_valid_ca_types }}."
+    success_msg: "Valid pki_ca_type: '{{ pki_ca_type }}'"
+
+- name: Validate dependencies
+  ansible.builtin.import_tasks: validate/dependencies.yml
+
+- name: Validate CA files structure
+  ansible.builtin.import_tasks: validate/ca-files-structure.yml
+
+- name: Verify that CSR file exists
+  ansible.builtin.stat:
+    path: "{{ pki_ca_base_data_dir }}/{{ pki_ca_identifier }}.csr"
+  failed_when: >-
+    not __pki_verify_csr_file.stat.exists
+    or not __pki_verify_csr_file.stat.isreg
+  register: __pki_verify_csr_file
+
+- name: Create self-signed Root Certificate Authority (CA)
+  ansible.builtin.command:
+    argv:
+      - openssl
+      - ca
+      - -selfsign
+      - -verbose
+      - -batch
+      - -config
+      - "{{ pki_config_dir }}/openssl.cnf"
+      - -name
+      - root_ca_definition
+      - -extensions
+      - ca_ext
+      - -in
+      - "{{ pki_ca_base_data_dir }}/{{ pki_ca_identifier }}.csr"
+      - -out
+      - "{{ pki_ca_base_data_dir }}/{{ pki_ca_identifier }}.crt"
+    creates: "{{ pki_ca_base_data_dir }}/{{ pki_ca_identifier }}.crt"
+  when:
+    - pki_ca_type is eq('root-ca')
+  environment:
+    PKI_CA_NAME: "{{ pki_ca_identifier }}"
+    PKI_CA_DATA_DIR: "{{ pki_ca_base_data_dir }}"
+
+- name: Check that 'pki_ca_issuer' contains a valid value
+  ansible.builtin.assert:
+    that:
+      - pki_ca_issuer is string
+      - pki_ca_issuer is regex(__pki_identifier_re)
+    fail_msg: |
+      Invalid value for pki_ca_issuer '{{ pki_ca_issuer }}'.
+      Must match regex: {{ __pki_identifier_re }}.
+  when:
+    - pki_ca_type is eq('intermediate-ca')
+
+- name: Verify Issuer certs files exists
+  ansible.builtin.stat:
+    path: "{{ __pki_file_to_verify }}"
+  failed_when: >-
+    not __pki_verify_file.stat.exists
+    or not __pki_verify_file.stat.isreg
+  register: __pki_verify_file
+  loop_control:
+    loop_var: __pki_file_to_verify
+  loop:
+    - "{{ pki_ca_base_data_dir }}/{{ pki_ca_issuer }}/private/{{ pki_ca_issuer }}.key"
+    - "{{ pki_ca_base_data_dir }}/{{ pki_ca_issuer }}.crt"
+  when:
+    - pki_ca_type is eq('intermediate-ca')
+
+- name: Create Intermediate Certificate Authority (CA)
+  ansible.builtin.command:
+    argv:
+      - openssl
+      - ca
+      - -verbose
+      - -batch
+      - -config
+      - "{{ pki_config_dir }}/openssl.cnf"
+      - -name
+      - root_ca_definition
+      - -extensions
+      - intermediate_ca_ext
+      - -keyfile
+      - "{{ pki_ca_base_data_dir }}/{{ pki_ca_issuer }}/private/{{ pki_ca_issuer }}.key"
+      - -cert
+      - "{{ pki_ca_base_data_dir }}/{{ pki_ca_issuer }}.crt"
+      - -in
+      - "{{ pki_ca_base_data_dir }}/{{ pki_ca_identifier }}.csr"
+      - -out
+      - "{{ pki_ca_base_data_dir }}/{{ pki_ca_identifier }}.crt"
+    creates: "{{ pki_ca_base_data_dir }}/{{ pki_ca_identifier }}.crt"
+  when:
+    - pki_ca_type is eq('intermediate-ca')
+  environment:
+    PKI_CA_NAME: "{{ pki_ca_identifier }}"
+    PKI_CA_DATA_DIR: "{{ pki_ca_base_data_dir }}"
