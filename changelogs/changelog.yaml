@@ -1,2 +1,14 @@
+---
 ancestor: null
-releases: []
+releases:
+  0.1.0:
+    changes:
+      release_summary: This is the first pre-release of the ``sinetris.tools`` collection.
+    fragments:
+      - first_pre_release.yaml
+    objects:
+      role:
+        - description: Role to create PKIs.
+          name: pki
+          namespace: null
+    release_date: '2025-08-11'

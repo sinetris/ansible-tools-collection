@@ -1,9 +1,9 @@
 objects:
   role:
     pki:
-      description: Role to create PKIs.
+      description: Role to create PKIs
       name: pki
-      version_added: null
+      version_added: 0.1.0
 plugins:
   become: {}
   cache: {}

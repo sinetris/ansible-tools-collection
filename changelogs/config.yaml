@@ -35,4 +35,6 @@ sections:
     - Documentation Changes
 title: sinetris.tools
 trivial_section_name: trivial
+changelog_nice_yaml: true
+changelog_sort: version
 use_fqcn: true
