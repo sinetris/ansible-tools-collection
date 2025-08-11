@@ -12,7 +12,8 @@ This repository contains the `sinetris.tools` Ansible Collection.
   - [Use a Dev Container](#use-a-dev-container)
     - [Install Colima on Mac](#install-colima-on-mac)
   - [Local OS](#local-os)
-- [Development setup](#development-setup)
+- [Development](#development)
+- [Create changelogs for a new release](#create-changelogs-for-a-new-release)
 - [More information](#more-information)
 - [Licensing](#licensing)
 
@@ -158,7 +159,7 @@ pre-commit install --install-hooks
 ansible-galaxy install -r requirements.yml
 ```
 
-## Development setup
+## Development
 
 After fulfilling the [requirements](#development-requirements),
 from the project root run:
@@ -176,16 +177,30 @@ collection_prep_add_docs -p . --link-collection
 tox list --ansible --conf tox-ansible.ini
 # Run sanity tests on all available environments
 tox --ansible -f sanity --conf tox-ansible.ini
+```
+
+To propose changes:
+
+Create a new branch, make changes, add a changelog file documenting the changes (see
+[antsibull-changelog documentation][antsibull-changelog-docs] for details), run tests,
+commit changes in new branch, make pull request.
+
+```sh
+# Validating changelog fragments
+antsibull-changelog lint
 # Run all tests on all available environments
 tox --ansible -p auto --conf tox-ansible.ini
 ```
 
-## More information
+## Create changelogs for a new release
 
-<!--
-  List out where the user can find additional information, such as working group meeting times, slack/matrix
-  channels, or documentation for the product this collection automates. At a minimum, link to:
--->
+> **Note:** This is done by the collection maintainers
+
+```sh
+antsibull-changelog release --version 0.1.1
+```
+
+## More information
 
 - [Ansible collection development forum](https://forum.ansible.com/c/project/collection-development/27)
 - [Ansible User guide](https://docs.ansible.com/ansible/devel/user_guide/index.html)
@@ -201,6 +216,7 @@ Apache License 2.0 or later.
 
 See [LICENSE](LICENSE) to see the full text.
 
+[antsibull-changelog-docs]: <https://ansible.readthedocs.io/projects/antsibull-changelog/changelogs/> "antsibull-changelog Documentation"
 [colima]: <https://github.com/abiosoft/colima> "Colima: container runtimes on macOS"
 [docker-mac]: <https://docs.docker.com/desktop/setup/install/mac-install/> "Install Docker Desktop on Mac"
 [docker-setup]: <https://docs.docker.com/get-started/introduction/get-docker-desktop/> "Get Docker Desktop"

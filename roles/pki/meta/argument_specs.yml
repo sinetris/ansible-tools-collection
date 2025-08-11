@@ -3,7 +3,8 @@
 
 argument_specs:
   main:
-    short_description: Role to create PKIs.
+    short_description: Role to create PKIs
+    version_added: 0.1.0
     options:
       pki_action:
         type: str
