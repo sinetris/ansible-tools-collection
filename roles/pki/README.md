@@ -10,7 +10,7 @@ OpenSSL 3 CLI (can be installed by this role).
 
 ## Role Variables
 
-See [argument_specs.yml](meta/argument_specs.yml).
+See [argument_specs.yml](https://github.com/sinetris/ansible-tools-collection/blob/main/roles/pki/meta/argument_specs.yml).
 
 ## Dependencies
 
@@ -100,7 +100,8 @@ This role is idempotent (can be applied multiple times without changing the resu
 
 Apache License 2.0 or later.
 
-See [LICENSE](../../LICENSE) to see the full text.
+See [LICENSE](https://github.com/sinetris/ansible-tools-collection/blob/main/LICENSE)
+to see the full text.
 
 ## Resources
 

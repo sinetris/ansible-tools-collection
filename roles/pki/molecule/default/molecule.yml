@@ -1,0 +1,18 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: instance-noble
+    image: ubuntu
+    image_version: noble
+    privileged: true
+provisioner:
+  name: ansible
+  options:
+    verbose: true
+scenario:
+  name: default
+verifier:
+  name: ansible

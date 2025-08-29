@@ -1,2 +1,3 @@
 # For now, ignore collection version less than 1.0.0
 galaxy.yml galaxy[version-incorrect]
+changelogs/.plugin-cache.yaml yaml[document-start]
