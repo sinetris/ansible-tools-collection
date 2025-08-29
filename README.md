@@ -214,7 +214,8 @@ antsibull-changelog release --version 0.1.1
 
 Apache License 2.0 or later.
 
-See [LICENSE](LICENSE) to see the full text.
+See [LICENSE](https://github.com/sinetris/ansible-tools-collection/blob/main/LICENSE)
+to see the full text.
 
 [antsibull-changelog-docs]: <https://ansible.readthedocs.io/projects/antsibull-changelog/changelogs/> "antsibull-changelog Documentation"
 [colima]: <https://github.com/abiosoft/colima> "Colima: container runtimes on macOS"
