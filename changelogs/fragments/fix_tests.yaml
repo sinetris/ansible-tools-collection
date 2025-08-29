@@ -1,0 +1,7 @@
+---
+minor_changes:
+  - Ignore ansible artifacts
+  - Fix indentation in README code
+  - Fix links in README
+  - Add development dependencies
+  - pki - Add basic tests structure
