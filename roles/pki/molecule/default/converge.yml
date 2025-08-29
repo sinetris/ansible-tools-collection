@@ -1,0 +1,17 @@
+---
+- name: Testing PKI
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Verify argument_specs
+      ansible.builtin.validate_argument_spec:
+        argument_spec: "{{ (lookup('ansible.builtin.file', filename) | from_yaml)['argument_specs'][play_name]['options'] }}"
+        provided_arguments:
+          pki_action: prepare
+          pki_ca_type: root-ca
+          pki_cert_type: self-signed-cert
+          pki_project: demo
+      vars:
+        play_name: main
+        filename: "../../meta/argument_specs.yml"

@@ -4,15 +4,17 @@
     "dockerfile": "assets/Dockerfile",
     "context": ".."
   },
-  "workspaceFolder": "/workspace",
+  "workspaceFolder": "/workspace/ansible_collections/sinetris/tools/",
   "workspaceMount": "source=${localWorkspaceFolder},target=${containerWorkspaceFolder},type=bind",
   "remoteUser": "vscode",
   "runArgs": [
     "--hostname=ansible-dev-container"
   ],
   "updateRemoteUserUID": true,
+  "privileged": true,
   "containerEnv": {
-    "PROJECT_WORKDIR": "${containerWorkspaceFolder}"
+    "PROJECT_WORKDIR": "${containerWorkspaceFolder}",
+    "DOCKER_HOST": "unix:///var/run/docker.sock"
   },
   "postCreateCommand": [
     "/bin/sh",
@@ -48,6 +50,7 @@
   },
   "features": {
     "ghcr.io/jungaretti/features/make:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers-extra/features/shellcheck:1": {},
     "ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {}
   }

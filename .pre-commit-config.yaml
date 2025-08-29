@@ -14,11 +14,11 @@ repos:
           - .
           - --link-collection
   - repo: https://github.com/ansible/ansible-lint
-    rev: v25.7.0
+    rev: v25.8.2
     hooks:
       - id: ansible-lint
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       # Git style
       - id: check-added-large-files

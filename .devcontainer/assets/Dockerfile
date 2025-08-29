@@ -18,7 +18,7 @@ ARG USERNAME=vscode
 
 USER ${USERNAME}
 ENV HOME=/home/${USERNAME}
-ENV PROJECT_WORKDIR=/workspace
+ENV PROJECT_WORKDIR=/workspace/ansible_collections/sinetris/tools/
 WORKDIR ${HOME}
 
 RUN curl https://pyenv.run | bash
