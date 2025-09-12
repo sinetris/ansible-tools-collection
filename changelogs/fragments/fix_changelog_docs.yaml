@@ -1,0 +1,4 @@
+---
+minor_changes:
+  - Fix chngelog docs
+  - Update version in galaxy.yml

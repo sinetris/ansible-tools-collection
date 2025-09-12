@@ -230,8 +230,11 @@ tox -e sanity-py3.12-2.19 --ansible --conf tox-ansible.ini --allow-dirty
 
 > **Note:** This is done by the collection maintainers
 
+Update version in `galaxy.yml`.
+
 ```sh
-antsibull-changelog release --version 0.1.1
+ansible-galaxy collection install --collections-path . --force .
+antsibull-changelog release -vv
 ```
 
 ### Generate Documentation
