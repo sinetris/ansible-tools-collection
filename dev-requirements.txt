@@ -2,8 +2,6 @@
 
 pre-commit ~= 4.2
 ansible-dev-tools ~= 25.5
-collection_prep @ git+https://github.com/ansible-network/collection_prep.git
-antsibull-changelog
 argcomplete ~= 3.6
 docker
 molecule-plugins[docker]

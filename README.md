@@ -8,12 +8,15 @@ This repository contains the `sinetris.tools` Ansible Collection.
 - [Using this collection](#using-this-collection)
 - [Release notes](#release-notes)
 - [Roadmap](#roadmap)
-- [Development Requirements](#development-requirements)
-  - [Use a Dev Container](#use-a-dev-container)
-    - [Install Colima on Mac](#install-colima-on-mac)
-  - [Local OS](#local-os)
 - [Development](#development)
-- [Create changelogs for a new release](#create-changelogs-for-a-new-release)
+  - [Requirements](#requirements)
+    - [Use a Dev Container](#use-a-dev-container)
+      - [Install Colima on Mac](#install-colima-on-mac)
+    - [Local OS](#local-os)
+  - [Run tests](#run-tests)
+  - [Propose Changes](#propose-changes)
+  - [Create changelogs for a new release](#create-changelogs-for-a-new-release)
+  - [Generate Documentation](#generate-documentation)
 - [More information](#more-information)
 - [Licensing](#licensing)
 
@@ -84,12 +87,14 @@ See the
   strategy so users can anticipate the upgrade/update cycle.
 -->
 
-## Development Requirements
+## Development
 
-### Use a Dev Container
+### Requirements
 
-To simplify development, this project includes a [devcontainer.json](.devcontainer/devcontainer.json)
-file that takes care of installing all dependencies in a container, allowing you to use the
+#### Use a Dev Container
+
+To simplify development, this project includes a [devcontainer.json] file that
+takes care of installing all dependencies in a container, allowing you to use the
 [Visual Studio Code Dev Containers][vs-code-devcontainers] extension.
 
 Requirements:
@@ -99,7 +104,7 @@ Requirements:
 > **NOTE:** If you are on macOS, is more convenient to install Docker in [Colima](#install-colima-on-mac).
 > instead of using [Docker Desktop for Mac][docker-mac].
 
-#### Install Colima on Mac
+##### Install Colima on Mac
 
 To use Docker in [Colima][colima] on macOS, you also need to install the related docker client CLIs.
 
@@ -118,7 +123,31 @@ cat > ~/.docker/config.json <<'EOF'
 EOF
 ```
 
-### Local OS
+Th default machine started by colima use 2 CPUs an 2GB of RAM.
+
+```terminal
+$ colima list
+PROFILE    STATUS     ARCH       CPUS    MEMORY    DISK      RUNTIME    ADDRESS
+default    Running    aarch64    2       2GiB      100GiB    docker
+```
+
+To change the machine resources used, stop the image and restart it with different amount of CPUs
+and RAM (if you want to assign an IP to the machine, add `--network-address`).
+
+```sh
+colima stop
+colima start --cpu 4 --memory 8 --network-address
+```
+
+Check if the changes have been applied.
+
+```terminal
+$ colima list
+PROFILE    STATUS     ARCH       CPUS    MEMORY    DISK      RUNTIME    ADDRESS
+default    Running    aarch64    4       8GiB      100GiB    docker     192.168.106.13
+```
+
+#### Local OS
 
 > **Note:** To develop Ansible collections, the collection must be in a directory under
 > `ansible_collections/<namespace>/<name>`.
@@ -152,16 +181,13 @@ pip install --upgrade pip
 # Install development packages
 pip install -r dev-requirements.txt
 
-# Install pre-commit script and hooks
-pre-commit install --install-hooks
-
 # Install collection requirements
 ansible-galaxy install -r requirements.yml
 ```
 
-## Development
+### Run tests
 
-After fulfilling the [requirements](#development-requirements),
+After fulfilling the [requirements](#requirements),
 from the project root run:
 
 ```sh
@@ -169,6 +195,8 @@ from the project root run:
 pre-commit validate-config
 # Update pre-commit config repos
 pre-commit autoupdate
+# Install pre-commit script and hooks
+pre-commit install --install-hooks
 # Run pre-commit for all files (to ensure there are no errors)
 pre-commit run --all-files
 # Ensure generated documentation is up to date
@@ -176,10 +204,12 @@ collection_prep_add_docs -p . --link-collection
 # List tests available environments
 tox list --ansible --conf tox-ansible.ini
 # Run sanity tests on all available environments
-tox --ansible -f sanity --conf tox-ansible.ini
+tox run --ansible -f sanity --conf tox-ansible.ini
+# Run all tests in parallel
+ansible-test integration --docker --docker-privileged --docker-network=bridge
 ```
 
-To propose changes:
+### Propose Changes
 
 Create a new branch, make changes, add a changelog file documenting the changes (see
 [antsibull-changelog documentation][antsibull-changelog-docs] for details), run tests,
@@ -189,16 +219,36 @@ commit changes in new branch, make pull request.
 # Validating changelog fragments
 antsibull-changelog lint
 # Run all tests on all available environments
-tox --ansible -p auto --conf tox-ansible.ini
+tox run-parallel --ansible --conf tox-ansible.ini
+# If you want to test changes not committed to git yet, add `--allow-dirty`
+# For example:
+echo 'Remember to remove this line' >> README.md
+tox -e sanity-py3.12-2.19 --ansible --conf tox-ansible.ini --allow-dirty
 ```
 
-## Create changelogs for a new release
+### Create changelogs for a new release
 
 > **Note:** This is done by the collection maintainers
 
 ```sh
 antsibull-changelog release --version 0.1.1
 ```
+
+### Generate Documentation
+
+To update the documentation, run:
+
+```sh
+tox run -f docs --ansible --conf tox-ansible.ini
+```
+
+To generate html files from the documentation, run:
+
+```sh
+tox run -f docs-build --ansible --conf tox-ansible.ini
+```
+
+To see a preview, open `docs/build/index.html` in a browser.
 
 ## More information
 
@@ -222,3 +272,4 @@ to see the full text.
 [docker-mac]: <https://docs.docker.com/desktop/setup/install/mac-install/> "Install Docker Desktop on Mac"
 [docker-setup]: <https://docs.docker.com/get-started/introduction/get-docker-desktop/> "Get Docker Desktop"
 [vs-code-devcontainers]: <https://code.visualstudio.com/docs/devcontainers/containers> "VS Code: Developing inside a Container"
+[devcontainer.json]: <https://github.com/sinetris/ansible-tools-collection/blob/main/.devcontainer/devcontainer.json> "devcontainer.json"
