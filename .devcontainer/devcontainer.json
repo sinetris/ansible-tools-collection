@@ -51,7 +51,6 @@
   "features": {
     "ghcr.io/jungaretti/features/make:1": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/devcontainers-extra/features/shellcheck:1": {},
     "ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {}
   }
 }
