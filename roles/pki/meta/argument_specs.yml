@@ -4,6 +4,10 @@
 argument_specs:
   main:
     short_description: Role to create PKIs
+    description:
+      - Role to create PKIs
+    author:
+      - Duilio Ruggiero
     version_added: 0.1.0
     options:
       pki_action:
