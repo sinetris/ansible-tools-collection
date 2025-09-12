@@ -1,0 +1,5 @@
+---
+minor_changes:
+  - Update version in galaxy.yml
+  - Fix collection install for docs in tox
+  - Generate new changelogs
