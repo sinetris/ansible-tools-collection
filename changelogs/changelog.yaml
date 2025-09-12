@@ -38,3 +38,12 @@ releases:
       - fix_tests.yaml
       - update_documentation.yaml
     release_date: '2025-09-12'
+  0.1.2:
+    changes:
+      minor_changes:
+        - Fix collection install for docs in tox
+        - Generate new changelogs
+        - Update version in galaxy.yml
+    fragments:
+      - fix_version.yaml
+    release_date: '2025-09-12'
