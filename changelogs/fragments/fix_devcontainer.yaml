@@ -3,3 +3,4 @@ bugfixes:
   - Add docker-in-docker feature to devcontainer
   - Fix devcontainer workdir
   - Fix DOCKER_HOST env variable in devcontainer
+  - Remove features/shellcheck in devcontainer

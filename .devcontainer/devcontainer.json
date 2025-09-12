@@ -13,8 +13,7 @@
   "updateRemoteUserUID": true,
   "privileged": true,
   "containerEnv": {
-    "PROJECT_WORKDIR": "${containerWorkspaceFolder}",
-    "DOCKER_HOST": "unix:///var/run/docker.sock"
+    "PROJECT_WORKDIR": "${containerWorkspaceFolder}"
   },
   "postCreateCommand": [
     "/bin/sh",
