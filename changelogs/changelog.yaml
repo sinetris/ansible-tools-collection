@@ -12,3 +12,29 @@ releases:
           name: pki
           namespace: null
     release_date: '2025-08-11'
+  0.1.1:
+    changes:
+      bugfixes:
+        - Add docker-in-docker feature to devcontainer
+        - Fix DOCKER_HOST env variable in devcontainer
+        - Fix devcontainer workdir
+        - Remove features/shellcheck in devcontainer
+      minor_changes:
+        - Add development dependencies
+        - Fix chngelog docs
+        - Fix docs update scripts
+        - Fix indentation in README code
+        - Fix integration tests for roles
+        - Fix links in README
+        - Ignore ansible artifacts
+        - Update documentation
+        - Update version in galaxy.yml
+        - pki - Add basic tests structure
+    fragments:
+      - fix_changelog_docs.yaml
+      - fix_devcontainer.yaml
+      - fix_docs_update.yaml
+      - fix_integration_tests.yaml
+      - fix_tests.yaml
+      - update_documentation.yaml
+    release_date: '2025-09-12'
