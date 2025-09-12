@@ -1,3 +1,7 @@
+pytest
 pytest-ansible ~= 25.6
 pytest-xdist ~= 3.8
 molecule ~= 25.7
+tox >= 4.29
+tox-extra>=2.2
+semantic_version

@@ -4,7 +4,7 @@ name: "tools"
 version: 0.1.0
 readme: README.md
 authors:
-  - Duilio Ruggiero <duilio@sinetris.info>
+  - Duilio Ruggiero <https://github.com/sinetris>
 description: Ansible Collection to manage basic infrastructure components
 license_file: LICENSE
 tags:
@@ -20,5 +20,10 @@ documentation: https://github.com/sinetris/ansible-tools-collection
 homepage: https://github.com/sinetris/ansible-tools-collection
 issues: https://github.com/sinetris/ansible-tools-collection/issues
 build_ignore:
+  - .ansible
   - .gitignore
+  - .tmp
+  - .tox
+  - ansible_collections
   - changelogs/.plugin-cache.yaml
+  - collections

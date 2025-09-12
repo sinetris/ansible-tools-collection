@@ -14,4 +14,4 @@
           pki_project: demo
       vars:
         play_name: main
-        filename: "../../meta/argument_specs.yml"
+        filename: "../../../roles/pki/meta/argument_specs.yml"
