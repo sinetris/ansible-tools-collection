@@ -15,6 +15,17 @@
   "containerEnv": {
     "PROJECT_WORKDIR": "${containerWorkspaceFolder}"
   },
+  "mounts": [
+    "source=${devcontainerId}_tmp_volume,target=/tmp,type=volume",
+    "source=${devcontainerId}_cache_ansible,target=${containerWorkspaceFolder}.ansible,type=volume",
+    "source=${devcontainerId}_cache_tox,target=${containerWorkspaceFolder}.tox,type=volume",
+    "source=${devcontainerId}_cache_ansible_collections,target=${containerWorkspaceFolder}ansible_collections,type=volume"
+  ],
+  "onCreateCommand": {
+    "fix_tox_permissions": "sudo chown -R $(whoami) ${containerWorkspaceFolder}.tox",
+    "fix_ansible_permissions": "sudo chown -R $(whoami) ${containerWorkspaceFolder}.ansible",
+    "fix_ansible_collections_permissions": "sudo chown -R $(whoami) ${containerWorkspaceFolder}ansible_collections"
+  },
   "postCreateCommand": [
     "/bin/sh",
     "-c",

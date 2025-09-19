@@ -16,7 +16,7 @@ tags:
 dependencies:
   "ansible.utils": "*" # note: "*" selects the latest version available
 repository: https://github.com/sinetris/ansible-tools-collection
-documentation: https://github.com/sinetris/ansible-tools-collection
+documentation: https://sinetris.github.io/ansible-tools-collection
 homepage: https://github.com/sinetris/ansible-tools-collection
 issues: https://github.com/sinetris/ansible-tools-collection/issues
 build_ignore:
@@ -24,6 +24,11 @@ build_ignore:
   - .gitignore
   - .tmp
   - .tox
+  - .venv
+  - .vscode
+  - "*.tar.gz"
   - ansible_collections
   - changelogs/.plugin-cache.yaml
-  - collections
+  - docs/build
+  - docs/temp-rst
+  - tests/output
