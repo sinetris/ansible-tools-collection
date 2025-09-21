@@ -15,8 +15,10 @@ This repository contains the `sinetris.tools` Ansible Collection.
     - [Local OS](#local-os)
   - [Run tests](#run-tests)
   - [Propose Changes](#propose-changes)
-  - [Create changelogs for a new release](#create-changelogs-for-a-new-release)
-  - [Generate Documentation](#generate-documentation)
+    - [Steps example](#steps-example)
+  - [Create a new release](#create-a-new-release)
+    - [Create the new release changelogs](#create-the-new-release-changelogs)
+    - [Generate documentation](#generate-documentation)
 - [More information](#more-information)
 - [Licensing](#licensing)
 
@@ -179,7 +181,7 @@ pyenv version
 pip install --upgrade pip
 
 # Install development packages
-pip install -r dev-requirements.txt
+pip install -r requirements-dev.in
 
 # Install collection requirements
 ansible-galaxy install -r requirements.yml
@@ -191,64 +193,99 @@ After fulfilling the [requirements](#requirements),
 from the project root run:
 
 ```sh
-# Validate pre-commit config
-pre-commit validate-config
-# Update pre-commit config repos
-pre-commit autoupdate
-# Install pre-commit script and hooks
-pre-commit install --install-hooks
-# Run pre-commit for all files (to ensure there are no errors)
-pre-commit run --all-files
-# Ensure generated documentation is up to date
-collection_prep_add_docs -p . --link-collection
-# List tests available environments
-tox list --ansible --conf tox-ansible.ini
-# Run sanity tests on all available environments
-tox run --ansible -f sanity --conf tox-ansible.ini
+# List all tox available environments
+uvx tox list --ansible --conf tox-ansible.ini
+# Run sanity tests for detected python/ansible environments
+uvx tox run --ansible -f sanity --conf tox-ansible.ini
+# Update dependencies
+uvx tox run -f deps --ansible --conf tox-ansible.ini
+# Run linter
+uvx tox run -f lint --ansible --conf tox-ansible.ini
 # Run all tests in parallel
-ansible-test integration --docker --docker-privileged --docker-network=bridge
+uvx tox -p all --ansible --conf tox-ansible.ini
 ```
 
 ### Propose Changes
 
-Create a new branch, make changes, add a changelog file documenting the changes (see
-[antsibull-changelog documentation][antsibull-changelog-docs] for details), run tests,
-commit changes in new branch, make pull request.
+The steps to follow to propose changes are:
+
+- Fork and clone this repository
+  - [Fork this repository][github-docs-fork-a-repo]
+  - [Clone your forked repository locally][github-docs-clone-fork-locally]
+- Make changes (see [steps example](#steps-example) below)
+  - Change files
+  - Add a changelog file in `changelogs/fragments` documenting the changes \
+  (see [antsibull-changelog documentation][antsibull-changelog-docs] for details)
+  - Run changelog lint
+  - Commit changes in new branch
+  - Run tests
+  - Push branch to remote fork
+- [Create a pull request to the original repository][github-docs-create-pr-from-fork]
+
+#### Steps example
 
 ```sh
-# Validating changelog fragments
-antsibull-changelog lint
-# Run all tests on all available environments
-tox run-parallel --ansible --conf tox-ansible.ini
-# If you want to test changes not committed to git yet, add `--allow-dirty`
-# For example:
-echo 'Remember to remove this line' >> README.md
-tox -e sanity-py3.12-2.19 --ansible --conf tox-ansible.ini --allow-dirty
+# Pick a meningful name for the banch
+new_branch_name='example-to-propose-changes'
+# Switch to the new branch
+git checkout -b "${new_branch_name:?}"
+# Make changes to the code
+echo 'Remember to remove this line ;)' >> README.md
+# Add a changelog file describing the changes
+_fragment_content=$(cat <<-'END'
+	---
+	minor_changes:
+	  - Add a useless line in README.md
+END
+)
+_fragment_file='pollute_readme.yaml'
+echo "${_fragment_content:?}" > "changelogs/fragments/${_fragment_file:?}"
+# Validate the changelog fragments
+# note: add `--allow-dirty` to test changes not yet committed to git
+uvx tox -f changelogs-lint --ansible --conf tox-ansible.ini --allow-dirty
+# Stage and commit changes for tox tests to work
+git add .
+git commit -m "Added a useless line in README.md"
+# Run linters
+uvx tox -f lint --ansible --conf tox-ansible.ini
+# Run all tests in parallel
+uvx tox -p all --ansible --conf tox-ansible.ini
+# Push changes to your remote fork
+git push
 ```
 
-### Create changelogs for a new release
+### Create a new release
 
 > **Note:** This is done by the collection maintainers
 
-Update version in `galaxy.yml`.
+For the example we will use the version `v1.0.0`.
+
+- create a new git branch named `release-v1.0.0`
+- update version in `galaxy.yml` to `version: 1.0.0`
+- update version in `pyproject.toml` to `version = "1.0.0"`
+- [generate the new release changelogs](#create-the-new-release-changelogs)
+- [generate the documentation](#generate-documentation)
+- create a commit with the changes
+- create a PR to merge the new branch
+
+#### Create the new release changelogs
 
 ```sh
-ansible-galaxy collection install --no-cache --offline --collections-path . --force .
-antsibull-changelog release -vv
+uvx tox -f changelogs --ansible --conf tox-ansible.ini --allow-dirty
 ```
 
-### Generate Documentation
+#### Generate documentation
 
 To update the documentation, run:
 
 ```sh
-tox run -f docs --ansible --conf tox-ansible.ini
+uvx tox -f docs-update --ansible --conf tox-ansible.ini --allow-dirty
 ```
 
-To generate html files from the documentation, run:
+If you want to inspect the documentation locally, you can generate html files running:
 
 ```sh
-tox run -f docs-build --ansible --conf tox-ansible.ini
+uvx tox -f docs-update --ansible --conf tox-ansible.ini --allow-dirty
 ```
 
 To see a preview, open `docs/build/index.html` in a browser.
@@ -272,7 +309,10 @@ to see the full text.
 
 [antsibull-changelog-docs]: <https://ansible.readthedocs.io/projects/antsibull-changelog/changelogs/> "antsibull-changelog Documentation"
 [colima]: <https://github.com/abiosoft/colima> "Colima: container runtimes on macOS"
+[devcontainer.json]: <https://github.com/sinetris/ansible-tools-collection/blob/main/.devcontainer/devcontainer.json> "devcontainer.json"
 [docker-mac]: <https://docs.docker.com/desktop/setup/install/mac-install/> "Install Docker Desktop on Mac"
 [docker-setup]: <https://docs.docker.com/get-started/introduction/get-docker-desktop/> "Get Docker Desktop"
+[github-docs-create-pr-from-fork]: <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork> "GitHub Docs: Creating a pull request from a fork"
+[github-docs-clone-fork-locally]: <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo#cloning-your-forked-repository> "GitHub Docs: Cloning your forked repository"
+[github-docs-fork-a-repo]: <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo> "GitHub Docs: Fork a repository"
 [vs-code-devcontainers]: <https://code.visualstudio.com/docs/devcontainers/containers> "VS Code: Developing inside a Container"
-[devcontainer.json]: <https://github.com/sinetris/ansible-tools-collection/blob/main/.devcontainer/devcontainer.json> "devcontainer.json"

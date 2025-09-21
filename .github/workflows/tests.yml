@@ -27,6 +27,7 @@ jobs:
   unit-source:
     uses: ansible-network/github_actions/.github/workflows/unit_source.yml@main
     with:
+      ansible_test_requirement_files: 'requirements.txt requirements-test.txt'
       collection_pre_install: >-
         git+https://github.com/ansible-collections/ansible.utils.git
   all_green:

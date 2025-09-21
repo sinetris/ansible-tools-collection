@@ -3,7 +3,7 @@
 sinetris.tools.pki role -- Role to create PKIs
 ++++++++++++++++++++++++++++++++++++++++++++++
 
-This role is part of the `sinetris.tools collection <https://galaxy.ansible.com/ui/repo/published/sinetris/tools/>`_ (version 0.1.0).
+This role is part of the `sinetris.tools collection <https://galaxy.ansible.com/ui/repo/published/sinetris/tools/>`_ (version 0.1.2).
 
 It is not included in ``ansible-core``.
 To check whether it is installed, run :code:`ansible-galaxy collection list`.

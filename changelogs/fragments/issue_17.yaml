@@ -1,0 +1,7 @@
+---
+minor_changes:
+  - development - Use uv to manage python versions and packages
+  - development - Use uv in pre-commit
+  - development - Use a volume for .venv
+  - development - Update documentation on proposing changes
+  - development - Update documentation on creating releases

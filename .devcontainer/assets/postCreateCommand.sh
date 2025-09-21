@@ -6,14 +6,34 @@ set -Eeuo pipefail
 git config --global --add safe.directory "${PROJECT_WORKDIR:?}"
 cp "${PROJECT_WORKDIR}/.devcontainer/assets/.gitignore_global" ~/.gitignore_global
 
-cd "${PROJECT_WORKDIR}"
-pre-commit install --install-hooks
-ansible-galaxy install -r requirements.yml
-
-# Ensure proper DOCKER_HOST for docker-in-docker
-# for bash
+# Ensure proper DOCKER_HOST for docker-in-docker (for bash and zsh)
 sed -zi '/export DOCKER_HOST=/!s/$/\nexport DOCKER_HOST=unix:\/\/\/var\/run\/docker\.sock/' \
   ~/.bashrc
-# for zsh
 sed -zi '/export DOCKER_HOST=/!s/$/\nexport DOCKER_HOST=unix:\/\/\/var\/run\/docker\.sock/' \
-  ~/.zshenv
+  ~/.zshrc
+
+cd "${PROJECT_WORKDIR}"
+
+# Create and activate Python virtual environment
+uv venv --allow-existing --python="$(cat .python-version-default)"
+source .venv/bin/activate
+
+# Install tox and required dependencies
+uv tool install tox --with tox-ansible,tox-docker,tox-extra,tox-uv
+
+# Install pre-commit and pre-commit-uv
+uv tool install pre-commit --with pre-commit-uv --force-reinstall
+
+# Install ansible-dev-tools and executables
+_dev_tools_exec=(
+  ansible-builder
+  ansible-core
+  ansible-creator
+  ansible-dev-environment
+  ansible-lint
+  ansible-sign
+  molecule
+  ansible-navigator
+)
+uv tool install ansible-dev-tools --with-executables-from \
+  "${_dev_tools_exec[0]}$(printf ",%s" "${_dev_tools_exec[@]:1}")"

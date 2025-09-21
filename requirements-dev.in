@@ -1,4 +1,4 @@
--r test-requirements.txt
+-r requirements-test.in
 
 pre-commit ~= 4.2
 ansible-dev-tools ~= 25.5

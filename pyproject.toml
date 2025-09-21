@@ -1,3 +1,9 @@
+[project]
+name = "sinetris.tools"
+version = "0.1.2"
+requires-python = ">=3.11"
+dependencies = []
+
 [tool.black]
 line-length = 100
 
