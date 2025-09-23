@@ -3,12 +3,14 @@ name: Release sinetris.tools
 
 on:
   release:
-    types: [published]
+    types:
+      - published
 
 jobs:
-  release_automation_hub:
+  release_galaxy:
     uses: ansible/ansible-content-actions/.github/workflows/release_galaxy.yaml@main
     with:
       environment: release
+      galaxy_publish: true
     secrets:
       ansible_galaxy_api_key: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}

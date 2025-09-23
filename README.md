@@ -260,7 +260,7 @@ git push
 
 For the example we will use the version `v1.0.0`.
 
-- create a new git branch named `release-v1.0.0`
+- create a new git branch named `releases/v1.0.0`
 - update version in `galaxy.yml` to `version: 1.0.0`
 - update version in `pyproject.toml` to `version = "1.0.0"`
 - [generate the new release changelogs](#create-the-new-release-changelogs)
