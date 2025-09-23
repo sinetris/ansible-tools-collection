@@ -30,5 +30,4 @@ build_ignore:
   - ansible_collections
   - changelogs/.plugin-cache.yaml
   - docs/build
-  - docs/temp-rst
   - tests/output

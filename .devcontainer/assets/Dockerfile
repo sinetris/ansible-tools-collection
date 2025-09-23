@@ -1,5 +1,5 @@
-ARG VARIANT=3-bookworm
-FROM mcr.microsoft.com/devcontainers/python:${VARIANT}
+ARG VARIANT=bookworm
+FROM mcr.microsoft.com/devcontainers/base:${VARIANT}
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
@@ -12,7 +12,7 @@ RUN apt-get -y install --no-install-recommends \
 
 # Install other dependencies
 RUN apt-get -y install --no-install-recommends \
-  shellcheck fonts-powerline
+  shellcheck
 
 ARG USERNAME=vscode
 
@@ -21,34 +21,28 @@ ENV HOME=/home/${USERNAME}
 ENV PROJECT_WORKDIR=/workspace/ansible_collections/sinetris/tools/
 WORKDIR ${HOME}
 
-RUN curl https://pyenv.run | bash
+# Ensure ~/.local/bin exists and is in PATH
+RUN mkdir -p "$HOME/.local/bin"
+RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+ENV PATH="$HOME/.local/bin/:$PATH"
 
-# Configure pyenv for bash
-RUN echo 'export PYENV_ROOT="${HOME}/.pyenv"' >> ~/.bashrc
-RUN echo '[[ -d "${PYENV_ROOT}/bin" ]] && export PATH="${PYENV_ROOT}/bin:${PATH}"' >> ~/.bashrc
-RUN echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-RUN echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+# Install uv
+ENV UV_INSTALL_DIR="$HOME/.local/bin"
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Configure pyenv for zsh
-RUN echo 'export PYENV_ROOT="${HOME}/.pyenv"' >> ~/.zshenv
-RUN echo '[[ -d ${PYENV_ROOT}/bin ]] && export PATH="${PYENV_ROOT}/bin:${PATH}"' >> ~/.zshenv
-RUN echo 'eval "$(pyenv init - zsh)"' >> ~/.zshenv
-RUN echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.zshenv
+# Enable shell autocompletion for uv amd uvx commands (for bash and zsh)
+RUN echo 'eval "$(uv generate-shell-completion bash)"' >> ~/.bashrc
+RUN echo 'eval "$(uvx --generate-shell-completion bash)"' >> ~/.bashrc
+RUN echo 'eval "$(uv generate-shell-completion zsh)"' >> ~/.zshrc
+RUN echo 'eval "$(uvx --generate-shell-completion zsh)"' >> ~/.zshrc
 
 # Switch the shell to zsh
 SHELL ["/bin/zsh", "-c"]
 
-# Install Python versions from .python-version
-COPY .python-version .
-RUN pyenv install
-
-# Install development dependencies
-RUN pip install --upgrade pip
-
-COPY requirements.txt /tmp/pip-temp/
-COPY dev-requirements.txt /tmp/pip-temp/
-COPY test-requirements.txt /tmp/pip-temp/
-RUN pip --no-cache-dir install -r /tmp/pip-temp/dev-requirements.txt
+# Use uv to install Python versions from .python-version-default
+COPY .python-version-default .
+RUN uv python install "$(cat .python-version-default)"
 
 WORKDIR ${PROJECT_WORKDIR}
 

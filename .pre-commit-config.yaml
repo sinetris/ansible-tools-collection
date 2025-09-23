@@ -3,7 +3,37 @@ ci:
   autoupdate_schedule: monthly
   skip:
     - ansible-lint
+    - pip-compile
+default_install_hook_types:
+  - pre-commit
+  - post-checkout
+  - post-merge
+  - post-rewrite
 repos:
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.8.20
+    hooks:
+      # Compile requirements
+      - id: pip-compile
+        name: pip-compile requirements.in
+        args: [requirements.in, -o, requirements.txt]
+      - id: pip-compile
+        name: pip-compile requirements-dev.in
+        args: [requirements-dev.in, -o, requirements-dev.txt]
+        files: ^requirements-dev\.(in|txt)$
+      - id: pip-compile
+        name: pip-compile requirements-test.in
+        args: [requirements-test.in, -o, requirements-test.txt]
+        files: ^requirements-dev\.(in|txt)$
+      - id: pip-compile
+        name: pip-compile docs/requirements.in
+        args: [docs/requirements.in, -o, docs/requirements.txt]
+        files: ^docs\/requirements\.(in|txt)$
+      - id: pip-compile
+        name: pip-compile docs/requirements-build.in
+        args: [docs/requirements-build.in, -o, docs/requirements-build.txt]
+        files: ^docs\/requirements-build\.(in|txt)$
+      - id: uv-lock
   - repo: https://github.com/ansible-network/collection_prep
     rev: 1.1.2
     hooks:
@@ -14,7 +44,7 @@ repos:
           - .
           - --link-collection
   - repo: https://github.com/ansible/ansible-lint
-    rev: v25.8.2
+    rev: v25.9.0
     hooks:
       - id: ansible-lint
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -83,10 +113,25 @@ repos:
         name: Sort import statements using isort
         args: ["--filter-files"]
   - repo: https://github.com/psf/black
-    rev: 25.1.0
+    rev: 25.9.0
     hooks:
       - id: black
   - repo: https://github.com/pycqa/flake8
     rev: 7.3.0
     hooks:
       - id: flake8
+  # Could be slower, so keep it last
+  - repo: local
+    hooks:
+      - id: deps
+        name: Upgrade constraints files and requirements
+        files: ^(pyproject\.toml|.config/.*)$
+        always_run: true
+        language: python
+        language_version: "3.11"
+        entry: python3 -m uv pip compile -q --universal --all-extras --output-file=.config/constraints.txt pyproject.toml --upgrade
+        pass_filenames: false
+        stages:
+          - manual
+        additional_dependencies:
+          - uv>=0.8.18

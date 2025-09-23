@@ -8,8 +8,7 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * *"
+
 jobs:
   changelog:
     uses: ansible/ansible-content-actions/.github/workflows/changelog.yaml@main
@@ -24,11 +23,6 @@ jobs:
     uses: ansible/ansible-content-actions/.github/workflows/unit.yaml@main
   integration:
     uses: ansible/ansible-content-actions/.github/workflows/integration.yaml@main
-  unit-source:
-    uses: ansible-network/github_actions/.github/workflows/unit_source.yml@main
-    with:
-      collection_pre_install: >-
-        git+https://github.com/ansible-collections/ansible.utils.git
   all_green:
     if: ${{ always() }}
     needs:
@@ -37,16 +31,15 @@ jobs:
       - sanity
       - unit-galaxy
       - integration
-      - unit-source
       - ansible-lint
     runs-on: ubuntu-latest
     steps:
       - run: >-
           python -c "assert 'failure' not in set([
             '${{ needs.changelog.result }}',
+            '${{ needs.build-import.result }}',
             '${{ needs.sanity.result }}',
             '${{ needs.unit-galaxy.result }}'
             '${{ needs.integration.result }}',
             '${{ needs.ansible-lint.result }}'
-            '${{ needs.unit-source.result }}'
           ])"

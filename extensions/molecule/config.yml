@@ -1,7 +1,8 @@
-# driver:
-#   name: docker
-# platforms:
-#   - name: instance-noble
-#     image: ubuntu
-#     image_version: noble
-#     privileged: true
+---
+driver:
+  name: docker
+platforms:
+  - name: instance-noble
+    image: ubuntu
+    image_version: noble
+    privileged: true
