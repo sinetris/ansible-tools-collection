@@ -260,6 +260,7 @@ git push
 
 For the example we will use the version `v1.0.0`.
 
+- ensure you are on the `main` branch and there are no pending changes to commit
 - create a new git branch named `releases/v1.0.0`
 - update version in `galaxy.yml` to `version: 1.0.0`
 - update version in `pyproject.toml` to `version = "1.0.0"`
@@ -267,6 +268,9 @@ For the example we will use the version `v1.0.0`.
 - [generate the documentation](#generate-documentation)
 - create a commit with the changes
 - create a PR to merge the new branch
+- merge PR
+- create a new release named `v1.0.0`
+- verify that the release is published on <https://galaxy.ansible.com/ui/repo/published/sinetris/tools>
 
 #### Create the new release changelogs
 
