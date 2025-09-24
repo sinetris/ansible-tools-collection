@@ -2,19 +2,37 @@
 
 **Topics**
 
-- <a href="#v0-1-2">v0\.1\.2</a>
+- <a href="#v0-1-3">v0\.1\.3</a>
     - <a href="#minor-changes">Minor Changes</a>
-- <a href="#v0-1-1">v0\.1\.1</a>
+- <a href="#v0-1-2">v0\.1\.2</a>
     - <a href="#minor-changes-1">Minor Changes</a>
+- <a href="#v0-1-1">v0\.1\.1</a>
+    - <a href="#minor-changes-2">Minor Changes</a>
     - <a href="#bugfixes">Bugfixes</a>
 - <a href="#v0-1-0">v0\.1\.0</a>
     - <a href="#release-summary">Release Summary</a>
     - <a href="#new-roles">New Roles</a>
 
+<a id="v0-1-3"></a>
+## v0\.1\.3
+
+<a id="minor-changes"></a>
+### Minor Changes
+
+* development \- Cleanup global gitignore
+* development \- Update documentation on creating releases
+* development \- Update documentation on proposing changes
+* development \- Use a volume for \.venv
+* development \- Use uv in pre\-commit
+* development \- Use uv to manage python versions and packages
+* documentation \- Add link to sinetris\.tools collection on Ansible Galaxy in extra\_links
+* documentation \- Add link to the documentation website published on GitHub Pages
+* documentation \- Publish generated HTML documentation to GitHub Pages
+
 <a id="v0-1-2"></a>
 ## v0\.1\.2
 
-<a id="minor-changes"></a>
+<a id="minor-changes-1"></a>
 ### Minor Changes
 
 * Fix collection install for docs in tox
@@ -24,7 +42,7 @@
 <a id="v0-1-1"></a>
 ## v0\.1\.1
 
-<a id="minor-changes-1"></a>
+<a id="minor-changes-2"></a>
 ### Minor Changes
 
 * Add development dependencies
