@@ -47,3 +47,22 @@ releases:
     fragments:
       - fix_version.yaml
     release_date: '2025-09-12'
+  0.1.3:
+    changes:
+      minor_changes:
+        - development - Cleanup global gitignore
+        - development - Update documentation on creating releases
+        - development - Update documentation on proposing changes
+        - development - Use a volume for .venv
+        - development - Use uv in pre-commit
+        - development - Use uv to manage python versions and packages
+        - documentation - Add link to sinetris.tools collection on Ansible Galaxy
+          in extra_links
+        - documentation - Add link to the documentation website published on GitHub
+          Pages
+        - documentation - Publish generated HTML documentation to GitHub Pages
+    fragments:
+      - cleanup_global_gitignore.yaml
+      - issue_17.yaml
+      - issue_19.yaml
+    release_date: '2025-09-24'
