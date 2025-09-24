@@ -1,0 +1,5 @@
+---
+minor_changes:
+  - documentation - Publish generated HTML documentation to GitHub Pages
+  - documentation - Add link to the documentation website published on GitHub Pages
+  - documentation - Add link to sinetris.tools collection on Ansible Galaxy in extra_links

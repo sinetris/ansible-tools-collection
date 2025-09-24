@@ -7,8 +7,5 @@ edit_on_github:
 extra_links:
   - description: Report an issue
     url: https://github.com/sinetris/ansible-tools-collection/issues/new/choose
-
-communication:
-  forum:
-    - topic: Ansible Forum
-      url: https://forum.ansible.com/
+  - description: Collection on Ansible Galaxy
+    url: https://galaxy.ansible.com/ui/repo/published/sinetris/tools

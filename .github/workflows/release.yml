@@ -9,6 +9,10 @@ on:
 jobs:
   validate-collection-version:
     uses: ./.github/workflows/validate_collection_version.yml
+  update-documentation:
+    uses: ./.github/workflows/gh-pages.yml
+    needs:
+      - validate-collection-version
   release-galaxy:
     uses: ansible/ansible-content-actions/.github/workflows/release_galaxy.yaml@main
     with:

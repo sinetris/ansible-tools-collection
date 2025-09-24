@@ -2,3 +2,4 @@ ansible-pygments
 antsibull-changelog
 sphinx
 sphinx-ansible-theme
+sphinx_copybutton
