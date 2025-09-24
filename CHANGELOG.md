@@ -20,6 +20,7 @@
 ### Minor Changes
 
 * development \- Cleanup global gitignore
+* development \- Fix gh\-pages workflow file name
 * development \- Update documentation on creating releases
 * development \- Update documentation on proposing changes
 * development \- Use a volume for \.venv
