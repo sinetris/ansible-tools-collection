@@ -51,6 +51,7 @@ releases:
     changes:
       minor_changes:
         - development - Cleanup global gitignore
+        - development - Fix gh-pages workflow file name
         - development - Update documentation on creating releases
         - development - Update documentation on proposing changes
         - development - Use a volume for .venv
@@ -63,6 +64,7 @@ releases:
         - documentation - Publish generated HTML documentation to GitHub Pages
     fragments:
       - cleanup_global_gitignore.yaml
+      - fix_gh_workflow.yaml
       - issue_17.yaml
       - issue_19.yaml
     release_date: '2025-09-24'
