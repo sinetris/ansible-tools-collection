@@ -6,7 +6,7 @@ on:
     inputs:
       release_pr_branch_start:
         description: Start of the release PR branch name
-        default: 'releases\/'
+        default: 'releases/'
         type: string
       galaxy_file:
         description: Path to galaxy.yml
@@ -80,7 +80,7 @@ jobs:
         id: get_branch_version
         run: |
           BRANCH_NAME=${{ github.head_ref }}
-          RELEASE_BRANCH_VERSION="${BRANCH_NAME//${{ inputs.release_pr_branch_start }}/""}"
+          RELEASE_BRANCH_VERSION="${BRANCH_NAME#${{ inputs.release_pr_branch_start }}}"
           [[ ${RELEASE_BRANCH_VERSION} =~ ${{ inputs.regex_version_releases }} ]] || {
             echo "❌ ERROR: unexpected version string '${RELEASE_BRANCH_VERSION}' in branch name '${BRANCH_NAME}'" >&2
             exit 1
