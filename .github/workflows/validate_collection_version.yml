@@ -44,7 +44,7 @@ jobs:
             echo "❌ ERROR: unexpected version string '${COLLECTION_VERSION}' in ${{ inputs.galaxy_file }}" >&2
             exit 1
           }
-          echo "::set-output name=collection_version::${COLLECTION_VERSION}"
+          echo "collection_version=${COLLECTION_VERSION}" >> $GITHUB_OUTPUT
       - name: Extract version from pyproject.toml
         id: get_pyproject_version
         run: |
@@ -53,7 +53,7 @@ jobs:
             echo "❌ ERROR: unexpected version string '${PYPROJECT_VERSION}' in ${{ inputs.pyproject_file }}" >&2
             exit 1
           }
-          echo "::set-output name=pyproject_version::${PYPROJECT_VERSION}"
+          echo "pyproject_version=${PYPROJECT_VERSION}" >> $GITHUB_OUTPUT
       - name: Verify version in galaxy.yml matches version in pyproject.toml
         env:
           COLLECTION_VERSION: ${{ steps.get_galaxy_version.outputs.collection_version }}
@@ -86,7 +86,7 @@ jobs:
             exit 1
           }
           RELEASE_BRANCH_VERSION=${RELEASE_BRANCH_VERSION#v}
-          echo "::set-output name=release_branch_version::${RELEASE_BRANCH_VERSION}"
+          echo "release_branch_version=${RELEASE_BRANCH_VERSION}" >> $GITHUB_OUTPUT
       - name: Verify version is in changelog.yaml
         id: verify_changelog
         env:
@@ -98,7 +98,7 @@ jobs:
             exit 1
           fi
           echo "✅ Version check in changelog file passed: '${{ inputs.changelog_file }}'"
-          echo "::set-output name=changelog_contains_version::true"
+          echo "changelog_contains_version=true" >> $GITHUB_OUTPUT
       - name: Verify version in release branch name matches version in galaxy.yml
         env:
           COLLECTION_VERSION: ${{ needs.validate-files-version.outputs.collection_version }}
