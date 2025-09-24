@@ -289,7 +289,7 @@ uvx tox -f docs-update --ansible --conf tox-ansible.ini --allow-dirty
 If you want to inspect the documentation locally, you can generate html files running:
 
 ```sh
-uvx tox -f docs-update --ansible --conf tox-ansible.ini --allow-dirty
+uvx tox -f docs-build --ansible --conf tox-ansible.ini --allow-dirty
 ```
 
 To see a preview, open `docs/build/index.html` in a browser.
