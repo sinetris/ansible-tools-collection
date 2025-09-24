@@ -51,10 +51,10 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Update documentation
-        run: uvx tox -f docs-update --ansible --conf tox-ansible.in
+        run: uvx tox -f docs-update --ansible --conf tox-ansible.ini
 
       - name: Generate documentation html
-        run: uvx tox -f docs-build --ansible --conf tox-ansible.in
+        run: uvx tox -f docs-build --ansible --conf tox-ansible.ini
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

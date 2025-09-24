@@ -1,0 +1,4 @@
+---
+minor_changes:
+  - development - Fix gh-pages workflow tox-ansible extension
+  - development - In release.yml GH workflow, release-galaxy needs update-documentation
