@@ -2,21 +2,32 @@
 
 **Topics**
 
-- <a href="#v0-1-3">v0\.1\.3</a>
+- <a href="#v0-1-4">v0\.1\.4</a>
     - <a href="#minor-changes">Minor Changes</a>
-- <a href="#v0-1-2">v0\.1\.2</a>
+- <a href="#v0-1-3">v0\.1\.3</a>
     - <a href="#minor-changes-1">Minor Changes</a>
-- <a href="#v0-1-1">v0\.1\.1</a>
+- <a href="#v0-1-2">v0\.1\.2</a>
     - <a href="#minor-changes-2">Minor Changes</a>
+- <a href="#v0-1-1">v0\.1\.1</a>
+    - <a href="#minor-changes-3">Minor Changes</a>
     - <a href="#bugfixes">Bugfixes</a>
 - <a href="#v0-1-0">v0\.1\.0</a>
     - <a href="#release-summary">Release Summary</a>
     - <a href="#new-roles">New Roles</a>
 
+<a id="v0-1-4"></a>
+## v0\.1\.4
+
+<a id="minor-changes"></a>
+### Minor Changes
+
+* development \- Fix gh\-pages workflow tox\-ansible extension
+* development \- In release\.yml GH workflow\, release\-galaxy needs update\-documentation
+
 <a id="v0-1-3"></a>
 ## v0\.1\.3
 
-<a id="minor-changes"></a>
+<a id="minor-changes-1"></a>
 ### Minor Changes
 
 * development \- Cleanup global gitignore
@@ -33,7 +44,7 @@
 <a id="v0-1-2"></a>
 ## v0\.1\.2
 
-<a id="minor-changes-1"></a>
+<a id="minor-changes-2"></a>
 ### Minor Changes
 
 * Fix collection install for docs in tox
@@ -43,7 +54,7 @@
 <a id="v0-1-1"></a>
 ## v0\.1\.1
 
-<a id="minor-changes-2"></a>
+<a id="minor-changes-3"></a>
 ### Minor Changes
 
 * Add development dependencies

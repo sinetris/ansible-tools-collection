@@ -68,3 +68,11 @@ releases:
       - issue_17.yaml
       - issue_19.yaml
     release_date: '2025-09-24'
+  0.1.4:
+    changes:
+      minor_changes:
+        - development - Fix gh-pages workflow tox-ansible extension
+        - development - In release.yml GH workflow, release-galaxy needs update-documentation
+    fragments:
+      - fix_gh_workflow.yaml
+    release_date: '2025-09-24'
