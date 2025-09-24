@@ -1,0 +1,162 @@
+---
+name: Validate Collection Version
+
+on:
+  workflow_call:
+    inputs:
+      release_pr_branch_start:
+        description: Start of the release PR branch name
+        default: 'releases\/'
+        type: string
+      galaxy_file:
+        description: Path to galaxy.yml
+        default: galaxy.yml
+        type: string
+      pyproject_file:
+        description: Path to pyproject.toml
+        default: pyproject.toml
+        type: string
+      changelog_file:
+        description: Path to changelog.yaml
+        default: changelogs/changelog.yaml
+        type: string
+      regex_version_files:
+        description: Regular Expression to match version in files
+        default: '^[0-9]+\.[0-9]+\.[0-9]+([-+][0-9a-bA-B_-]+)?$'
+        type: string
+      regex_version_releases:
+        description: Regular Expression to match version in releases
+        default: '^v?[0-9]+\.[0-9]+\.[0-9]+([-+][0-9a-bA-B_-]+)?$'
+        type: string
+
+jobs:
+  validate-files-version:
+    runs-on: ubuntu-latest
+    outputs:
+      collection_version: ${{ steps.get_galaxy_version.outputs.collection_version }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Extract version from galaxy.yml
+        id: get_galaxy_version
+        run: |
+          COLLECTION_VERSION=$(yq -r '.version' "${{ inputs.galaxy_file }}")
+          [[ ${COLLECTION_VERSION} =~ ${{ inputs.regex_version_files }} ]] || {
+            echo "❌ ERROR: unexpected version string '${COLLECTION_VERSION}' in ${{ inputs.galaxy_file }}" >&2
+            exit 1
+          }
+          echo "::set-output name=collection_version::${COLLECTION_VERSION}"
+      - name: Extract version from pyproject.toml
+        id: get_pyproject_version
+        run: |
+          PYPROJECT_VERSION=$(yq -r '.project.version' "${{ inputs.pyproject_file }}")
+          [[ ${PYPROJECT_VERSION} =~ ${{ inputs.regex_version_files }} ]] || {
+            echo "❌ ERROR: unexpected version string '${PYPROJECT_VERSION}' in ${{ inputs.pyproject_file }}" >&2
+            exit 1
+          }
+          echo "::set-output name=pyproject_version::${PYPROJECT_VERSION}"
+      - name: Verify version in galaxy.yml matches version in pyproject.toml
+        env:
+          COLLECTION_VERSION: ${{ steps.get_galaxy_version.outputs.collection_version }}
+          PYPROJECT_VERSION: ${{ steps.get_pyproject_version.outputs.pyproject_version }}
+        run: |
+          if [[ "${COLLECTION_VERSION}" != "${PYPROJECT_VERSION}" ]]; then
+            echo "❌ ERROR: version '$COLLECTION_VERSION' in galaxy.yml does not match version '$PYPROJECT_VERSION' in pyproject.toml" >&2
+            exit 1
+          fi
+          echo "✅ Version check for project files passed: '$COLLECTION_VERSION'"
+  validate-release-pr:
+    if: >-
+      ${{
+        (github.event_name == 'pull_request') &&
+        startsWith(github.head_ref, inputs.release_pr_branch_start) &&
+        (github.event.pull_request.head.repo.full_name == github.repository)
+      }}
+    runs-on: ubuntu-latest
+    needs:
+      - validate-files-version
+    steps:
+      - uses: actions/checkout@v5
+      - name: Extract version from branch name
+        id: get_branch_version
+        run: |
+          BRANCH_NAME=${{ github.head_ref }}
+          RELEASE_BRANCH_VERSION="${BRANCH_NAME//${{ inputs.release_pr_branch_start }}/""}"
+          [[ ${RELEASE_BRANCH_VERSION} =~ ${{ inputs.regex_version_releases }} ]] || {
+            echo "❌ ERROR: unexpected version string '${RELEASE_BRANCH_VERSION}' in branch name '${BRANCH_NAME}'" >&2
+            exit 1
+          }
+          RELEASE_BRANCH_VERSION=${RELEASE_BRANCH_VERSION#v}
+          echo "::set-output name=release_branch_version::${RELEASE_BRANCH_VERSION}"
+      - name: Verify version is in changelog.yaml
+        id: verify_changelog
+        env:
+          COLLECTION_VERSION: ${{ needs.validate-files-version.outputs.collection_version }}
+        run: |
+          CHANGELOG_VERSION=$(yq -r '.releases | keys[] | select(. == strenv(COLLECTION_VERSION))' "${{ inputs.changelog_file }}")
+          if [ "${CHANGELOG_VERSION}" != "${COLLECTION_VERSION}" ]; then
+            echo "❌ ERROR: version '$COLLECTION_VERSION' not found in changelog file '${{ inputs.changelog_file }}'" >&2
+            exit 1
+          fi
+          echo "✅ Version check in changelog file passed: '${{ inputs.changelog_file }}'"
+          echo "::set-output name=changelog_contains_version::true"
+      - name: Verify version in release branch name matches version in galaxy.yml
+        env:
+          COLLECTION_VERSION: ${{ needs.validate-files-version.outputs.collection_version }}
+          RELEASE_BRANCH_VERSION: ${{ steps.get_branch_version.outputs.release_branch_version }}
+        run: |
+          if [ "${RELEASE_BRANCH_VERSION}" != "${COLLECTION_VERSION}" ]; then
+            echo "❌ ERROR: version '$RELEASE_BRANCH_VERSION' in release branch name does not match version '$COLLECTION_VERSION' in galaxy.yml" >&2
+            exit 1
+          fi
+          echo "✅ Branch name version check passed: '$RELEASE_BRANCH_VERSION'"
+  validate-release-pr-is-not-a-fork:
+    if: >-
+      ${{
+        (github.event_name == 'pull_request') &&
+        startsWith(github.head_ref, inputs.release_pr_branch_start) &&
+        (github.event.pull_request.head.repo.full_name != github.repository)
+      }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Show an error
+        id: get_branch_version
+        run: |
+          echo "❌ ERROR: Branch name starting with '${{ inputs.release_pr_branch_start }}' cannot originate from a fork" >&2
+          exit 1
+  validate-release-tag-version:
+    if: github.event_name == 'release' && github.event.action == 'published'
+    runs-on: ubuntu-latest
+    needs:
+      - validate-files-version
+    steps:
+      - name: Verify release tag version matches version in galaxy.yml
+        env:
+          COLLECTION_VERSION: ${{ needs.validate-files-version.outputs.collection_version }}
+          RELEASE_TAG: ${{ github.event.release.tag_name  }}
+        run: |
+          [[ ${RELEASE_TAG} =~ ${{ inputs.regex_version_releases }} ]] || {
+            echo "❌ ERROR: unexpected version string '${RELEASE_TAG}' in release tag" >&2
+            exit 1
+          }
+          if [ "${RELEASE_TAG#v}" != "${COLLECTION_VERSION}" ]; then
+            echo "❌ ERROR: version '${RELEASE_TAG#v}' in release tag does not match version '$COLLECTION_VERSION' in galaxy.yml" >&2
+            exit 1
+          fi
+          echo "✅ Release tag version check passed: '$RELEASE_TAG'"
+  version_all_green:
+    if: ${{ always() }}
+    needs:
+      - validate-files-version
+      - validate-release-pr
+      - validate-release-pr-is-not-a-fork
+      - validate-release-tag-version
+    runs-on: ubuntu-latest
+    steps:
+      - run: >-
+          python -c "assert 'failure' not in set([
+            '${{ needs.validate-files-version.result }}',
+            '${{ needs.validate-release-pr.result }}',
+            '${{ needs.validate-release-pr-is-not-a-fork.result }}',
+            '${{ needs.validate-release-tag-version.result }}',
+          ])"

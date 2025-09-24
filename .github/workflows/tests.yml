@@ -10,6 +10,8 @@ on:
   workflow_dispatch:
 
 jobs:
+  validate-collection-version:
+    uses: ./.github/workflows/validate_collection_version.yml
   changelog:
     uses: ansible/ansible-content-actions/.github/workflows/changelog.yaml@main
     if: github.event_name == 'pull_request'
@@ -26,6 +28,7 @@ jobs:
   all_green:
     if: ${{ always() }}
     needs:
+      - validate-collection-version
       - changelog
       - build-import
       - sanity
@@ -36,10 +39,11 @@ jobs:
     steps:
       - run: >-
           python -c "assert 'failure' not in set([
+            '${{ needs.validate-collection-version.result }}',
             '${{ needs.changelog.result }}',
             '${{ needs.build-import.result }}',
             '${{ needs.sanity.result }}',
-            '${{ needs.unit-galaxy.result }}'
+            '${{ needs.unit-galaxy.result }}',
             '${{ needs.integration.result }}',
-            '${{ needs.ansible-lint.result }}'
+            '${{ needs.ansible-lint.result }}',
           ])"
