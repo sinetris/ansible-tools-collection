@@ -22,6 +22,7 @@
 ### Minor Changes
 
 * development \- Fix gh\-pages workflow tox\-ansible extension
+* development \- Fix gh\-pages workflow\, install tox required dependencies
 * development \- In release\.yml GH workflow\, release\-galaxy needs update\-documentation
 
 <a id="v0-1-3"></a>
