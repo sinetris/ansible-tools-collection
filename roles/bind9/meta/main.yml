@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  author: Duilio Ruggiero
+  description: sinetris.tools.bind9 - Role to install and maintain Bind9 nameservers
+  issue_tracker_url: https://github.com/sinetris/ansible-tools-collection/issues?q=label%3Arole%20label%3Abind9%20is%3Aissue
+  license: Apache-2.0
+  min_ansible_version: 2.16.0
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+        - bullseye
+    - name: Ubuntu
+      versions:
+        - noble
+        - jammy
+  galaxy_tags:
+    - dns
+    - bind9
+    - nameserver
