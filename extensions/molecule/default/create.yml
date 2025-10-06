@@ -1,0 +1,17 @@
+---
+- name: Create resources
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Assert that is working
+      ansible.builtin.assert:
+        that:
+          - true == true
+- name: Testing containers
+  hosts: instance1
+  gather_facts: true
+  tasks:
+    - name: Assert that is working
+      ansible.builtin.assert:
+        that:
+          - nope == {{ inventory_hostname }}

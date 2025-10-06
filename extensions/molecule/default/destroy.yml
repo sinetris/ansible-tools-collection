@@ -1,0 +1,9 @@
+---
+- name: Destroy shared resources
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Assert that is working
+      ansible.builtin.assert:
+        that:
+          - true == true

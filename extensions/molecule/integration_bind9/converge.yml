@@ -4,21 +4,22 @@
   connection: local
   gather_facts: false
   tasks:
-    - name: Set _argument_spec
+    - name: Set argument_spec vars
       ansible.builtin.set_fact:
-        _argument_spec: "{{ (lookup('ansible.builtin.file', filename) | from_yaml)['argument_specs'] }}"
+        argument_specs: "{{ (lookup('ansible.builtin.file', argument_specs_file) | from_yaml)['argument_specs'] }}"
+        play_name: main
       vars:
-        filename: "../../../roles/bind9/meta/argument_specs.yml"
-    # - name: Verify argument_specs defaults
-    #   ansible.builtin.validate_argument_spec:
-    #     argument_spec: "{{ _argument_spec[play_name]['options'] }}"
-    #   vars:
-    #     play_name: main
+        argument_specs_file: "../../../roles/bind9/meta/argument_specs.yml"
+    - name: Verify argument_specs defaults
+      ansible.builtin.validate_argument_spec:
+        argument_spec: "{{ argument_specs[play_name]['options'] }}"
+      vars:
+        play_name: main
     - name: Verify that argument_specs with wrong arguments fails
       ansible.builtin.validate_argument_spec:
-        argument_spec: "{{ _argument_spec[play_name]['options'] }}"
+        argument_spec: "{{ argument_specs[play_name]['options'] }}"
         provided_arguments:
-          bind9_dnssec_validation_mode: "{{ role_name }}"
+          bind9_dnssec_validation_mode: invalid"
           bind9_notify: invalid
           bind9_authoritative: nope
       register: argument_spec_wrong_arguments_result

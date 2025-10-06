@@ -159,8 +159,8 @@ default    Running    aarch64    4       8GiB      100GiB    docker     192.168.
 Requirements:
 
 - git
-- Python 3 (installed using `pyenv`)
-- [pyenv](https://github.com/pyenv/pyenv)
+- [uv](https://docs.astral.sh/uv/) (to install Python and dependencies)
+- Python 3 (installed using `uv`)
 
 ```sh
 # Clone the repository in a valid directory
@@ -170,18 +170,28 @@ cd "${MY_COLLECTIONS_PATH}"/sinetris
 git clone git@github.com:sinetris/ansible-tools-collection.git tools
 cd tools
 
-# Install Python 3 using pyenv
-pyenv install
+# Install Python 3 using uv
+uv venv --allow-existing --python="$(cat .python-version-default)"
 
-# Ensure we are using pyenv
-pyenv version
-# should show something like: 3.12.6 (set by PYENV_VERSION environment variable)
+# Activate Python environment
+source .venv/bin/activate
 
-# Update pip
-pip install --upgrade pip
+# Install tox and required dependencies
+uv tool install tox --with tox-ansible,tox-docker,tox-extra,tox-uv
 
-# Install development packages
-pip install -r requirements-dev.in
+# Install ansible-dev-tools and executables
+_dev_tools_exec=(
+  ansible-builder
+  ansible-core
+  ansible-creator
+  ansible-dev-environment
+  ansible-lint
+  ansible-sign
+  molecule
+  ansible-navigator
+)
+uv tool install ansible-dev-tools --with-executables-from \
+  "${_dev_tools_exec[0]}$(printf ",%s" "${_dev_tools_exec[@]:1}")"
 
 # Install collection requirements
 ansible-galaxy install -r requirements.yml
@@ -196,7 +206,7 @@ from the project root run:
 # List all tox available environments
 uvx tox list --ansible --conf tox-ansible.ini
 # Run sanity tests for detected python/ansible environments
-uvx tox run --ansible -f sanity --conf tox-ansible.ini
+uvx tox run -f sanity --ansible --conf tox-ansible.ini
 # Update dependencies
 uvx tox run -f deps --ansible --conf tox-ansible.ini
 # Run linter

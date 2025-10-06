@@ -1,15 +1,4 @@
 ---
-dependency:
-  name: galaxy
-platforms:
-  - name: na
-provisioner:
-  name: ansible
-  options:
-    verbose: true
-  config_options:
-    defaults:
-      collections_path: ${ANSIBLE_COLLECTIONS_PATH}
 scenario:
   test_sequence:
     - prepare

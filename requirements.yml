@@ -2,3 +2,5 @@
 collections:
   - name: community.general
   - name: ansible.utils
+  - name: community.docker
+    version: ">=4.8.1"

@@ -1,0 +1,47 @@
+---
+role_name_check: 1
+ansible:
+  executor:
+    args:
+      ansible_playbook:
+        - --inventory=${MOLECULE_SCENARIO_DIRECTORY}/../inventory/
+        - -vv
+
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+  - name: instance1
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-rockylinux9}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+
+provisioner:
+  name: ansible
+  options:
+    verbose: true
+  config_options:
+    defaults:
+      collections_path: ${ANSIBLE_COLLECTIONS_PATH}
+      deprecation_warnings: false
+      remote_tmp: /tmp/.ansible/tmp
+
+scenario:
+  test_sequence:
+    - dependency
+    # - cleanup
+    # - destroy
+    # - prepare
+    # - converge
+    - verify
+    # - idempotence
+    # - verify
+    # - cleanup
+    # - destroy
