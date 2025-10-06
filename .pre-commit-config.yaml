@@ -11,7 +11,7 @@ default_install_hook_types:
   - post-rewrite
 repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.8.20
+    rev: 0.8.23
     hooks:
       # Compile requirements
       - id: pip-compile
@@ -44,7 +44,7 @@ repos:
           - .
           - --link-collection
   - repo: https://github.com/ansible/ansible-lint
-    rev: v25.9.0
+    rev: v25.9.1
     hooks:
       - id: ansible-lint
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -107,12 +107,12 @@ repos:
             changelogs\/changelog\.yaml
           )$
   - repo: https://github.com/PyCQA/isort
-    rev: 6.0.1
+    rev: 6.1.0
     hooks:
       - id: isort
         name: Sort import statements using isort
         args: ["--filter-files"]
-  - repo: https://github.com/psf/black
+  - repo: https://github.com/psf/black-pre-commit-mirror
     rev: 25.9.0
     hooks:
       - id: black
