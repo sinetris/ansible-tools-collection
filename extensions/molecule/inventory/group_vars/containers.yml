@@ -1,0 +1,9 @@
+---
+ansible_connection: community.docker.docker
+# container_user: "{{ ansible_user }}"
+container_image: python:3.13-slim-bookworm
+container_state: healthy
+container_healthy_wait_timeout: 60
+container_healthcheck:
+  test: ["NONE"]
+  start_interval: 10s

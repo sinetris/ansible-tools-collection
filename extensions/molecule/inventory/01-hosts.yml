@@ -3,4 +3,4 @@ all:
   children:
     containers:
       hosts:
-        container-shared:
+        instance1:

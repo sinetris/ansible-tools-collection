@@ -7,3 +7,13 @@
       ansible.builtin.assert:
         that:
           - true == true
+- name: Destroy molecule containers
+  hosts: containers
+  gather_facts: false
+  tasks:
+    - name: Stop and remove container
+      delegate_to: localhost
+      community.docker.docker_container:
+        name: "{{ inventory_hostname }}"
+        state: absent
+        auto_remove: true
