@@ -4,14 +4,31 @@ ansible:
   executor:
     args:
       ansible_playbook:
-        - --inventory=${MOLECULE_SCENARIO_DIRECTORY}/../inventory/
-        - -vv
+        - -v
 
 dependency:
   name: galaxy
+  enabled: true
+  env:
+    ANSIBLE_COLLECTIONS_PATH: ${ANSIBLE_COLLECTIONS_PATH}
 
 driver:
   name: docker
+
+platforms:
+  - name: instance
+    image: debian:stable-slim
+    dockerfile: ../utils/Dockerfile.j2
+    privileged: false
+    cgroupns_mode: host
+    override_command: false
+    tmpfs:
+      - /run
+      - /tmp
+    capabilities:
+      - SYS_ADMIN
+    security_opts:
+      - seccomp=unconfined
 
 provisioner:
   name: ansible
