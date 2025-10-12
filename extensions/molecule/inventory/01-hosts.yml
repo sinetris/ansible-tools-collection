@@ -1,6 +1,0 @@
----
-all:
-  children:
-    containers:
-      hosts:
-        instance:

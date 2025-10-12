@@ -1,5 +1,4 @@
 ---
-role_name_check: 1
 ansible:
   executor:
     args:
@@ -16,12 +15,14 @@ driver:
   name: docker
 
 platforms:
-  - name: instance
+  - name: instance-${TOX_ENV_NAME}
     image: debian:stable-slim
     dockerfile: ../utils/Dockerfile.j2
     privileged: false
     cgroupns_mode: host
     override_command: false
+    groups:
+      - containers
     tmpfs:
       - /run
       - /tmp
@@ -43,12 +44,12 @@ provisioner:
 scenario:
   test_sequence:
     - dependency
-    # - cleanup
-    # - destroy
-    # - prepare
-    # - converge
+    - cleanup
+    - destroy
+    - prepare
+    - converge
     - verify
-    # - idempotence
-    # - verify
-    # - cleanup
-    # - destroy
+    - idempotence
+    - verify
+    - cleanup
+    - destroy
