@@ -13,7 +13,7 @@ RUN apt-get -y install --no-install-recommends \
 # Install other dependencies
 # Note: podman is required by molecule-plugins even when not used (bug)
 RUN apt-get -y install --no-install-recommends \
-  shellcheck podman
+  shellcheck podman gpg
 
 ARG USERNAME=vscode
 

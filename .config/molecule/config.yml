@@ -15,7 +15,8 @@ driver:
   name: docker
 
 platforms:
-  - name: instance-${TOX_ENV_NAME}
+  - name: instance-${TOX_ENV_NAME}.molecule.test
+    host: instance1
     image: debian:stable-slim
     dockerfile: ../utils/Dockerfile.j2
     privileged: false

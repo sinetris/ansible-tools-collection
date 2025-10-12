@@ -29,5 +29,6 @@ build_ignore:
   - "*.tar.gz"
   - ansible_collections
   - changelogs/.plugin-cache.yaml
+  - collections
   - docs/build
   - tests/output

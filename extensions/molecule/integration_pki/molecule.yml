@@ -1,7 +1,3 @@
 ---
-scenario:
-  test_sequence:
-    - prepare
-    - converge
 verifier:
   name: ansible
