@@ -1,4 +1,6 @@
 ---
+prerun: false
+
 ansible:
   executor:
     args:
