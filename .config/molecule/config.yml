@@ -8,8 +8,6 @@ ansible:
 dependency:
   name: galaxy
   enabled: true
-  env:
-    ANSIBLE_COLLECTIONS_PATH: ${ANSIBLE_COLLECTIONS_PATH}
 
 driver:
   name: docker
@@ -38,9 +36,7 @@ provisioner:
     verbose: true
   config_options:
     defaults:
-      collections_path: ${ANSIBLE_COLLECTIONS_PATH}
       deprecation_warnings: false
-      remote_tmp: /tmp/.ansible/tmp
 
 scenario:
   test_sequence:
