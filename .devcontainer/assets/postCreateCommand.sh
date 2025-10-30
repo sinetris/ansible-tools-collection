@@ -39,3 +39,5 @@ _dev_tools_exec=(
 )
 uv tool install ansible-dev-tools --with-executables-from \
   "${_dev_tools_exec[0]}$(printf ",%s" "${_dev_tools_exec[@]:1}")"
+
+ansible-galaxy collection install -r requirements.yml

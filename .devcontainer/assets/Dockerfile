@@ -8,11 +8,12 @@ RUN apt-get update
 RUN apt-get -y install --no-install-recommends \
   build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
   curl libonig-dev bash-completion libncursesw5-dev xz-utils tk-dev libxml2-dev \
-  libxmlsec1-dev libffi-dev liblzma-dev
+  libxmlsec1-dev libffi-dev liblzma-dev uidmap
 
 # Install other dependencies
+# Note: podman is required by molecule-plugins even when not used (bug)
 RUN apt-get -y install --no-install-recommends \
-  shellcheck
+  shellcheck podman gpg
 
 ARG USERNAME=vscode
 

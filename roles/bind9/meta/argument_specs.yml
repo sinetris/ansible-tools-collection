@@ -1,0 +1,286 @@
+---
+argument_specs:
+  main:
+    short_description: Role to install and manage Bind9 nameservers
+    description:
+      - Role to install and manage Bind9 nameservers (DNS server) configuration and zones.
+    author:
+      - Duilio Ruggiero
+    version_added: 0.1.5
+    options:
+      bind9_admin_email:
+        description: Administrator email
+        type: str
+        default: hostmaster
+      bind9_user:
+        description: OS user used for bind
+        type: str
+        default: bind
+      bind9_group:
+        description: OS group used for bind
+        type: str
+        default: bind
+      bind9_authoritative:
+        description: This DNS server keeps official records for the defined zones
+        type: bool
+        default: false
+      bind9_forwarder:
+        description:
+          - When V(true), this DNS server can forward requests to other DNS servers.
+        type: bool
+        default: false
+      bind9_recursor:
+        description: When V(true), this DNS server can resolve requests asking root DNS servers.
+        type: bool
+        default: false
+      bind9_allow_transfer:
+        description: When V(true), allow other DNS servers to transfer zones information from this DNS server.
+        type: bool
+        default: false
+      bind9_only_ipv4:
+        description: Retrict networking to use only IPv4
+        type: bool
+        default: false
+      bind9_listen_ipv4_allowed_networks:
+        description: List of IPv4 allowed to make requests to this server
+        type: list
+        elements: str
+        default:
+          - any
+      bind9_listen_ipv6_allowed_networks:
+        description: List of IPv6 allowed to make requests to this server
+        type: list
+        elements: str
+        default:
+          - any
+      bind9_forwarders:
+        description:
+          - List of nameservers that we want to forward requests to
+          - Ignored when O(bind9_forwarder=false).
+        type: list
+        elements: str
+        default: []
+      bind9_statistics:
+        description: Communication channels to get access to named statistics
+        type: dict
+        default:
+          enabled: false
+        options:
+          enabled:
+            description: Enable communication channels
+            type: bool
+          channels:
+            description: List of communication channels
+            type: list
+            elements: dict
+            default: []
+            options:
+              host:
+                description:
+                  - Host interface IPv4 or IPv6 listening on specified port
+                  - (can use C(*) for all IPv4 and C(::) for all IPv6)
+                type: str
+                required: true
+              port:
+                description: Port used for the TCP socket on the host
+                type: int
+                default: 80
+              allow:
+                description: When present, restrict access only to defined Address Match Lists O(bind9_notify)
+                type: str
+                required: false
+      bind9_dnssec_validation_mode:
+        description: DNSSEC validation mode
+        type: str
+        default: auto
+        choices:
+          # Enable and use default trust anchor
+          - auto
+          # Enable and require explicit static key using the trust-anchors statement
+          - 'true'
+          - 'yes'
+          # Disable
+          - 'false'
+          - 'no'
+      bind9_named_local_include_text:
+        description: Include free text at the end of named.conf.local
+        type: str
+        default: |
+          // Change this if you want to add something
+          // at the end of named.conf.local
+      bind9_named_options_include_text:
+        description: Include free text at the end of named.conf.options
+        type: str
+        default: |
+          // Change this if you want to add something\
+          // at the end of named.conf.options
+      bind9_notify:
+        description: NOTIFY messages on zone changes
+        type: str
+        default: 'yes'
+        choices:
+          # NOTIFY messages are only sent to servers explicitly listed using also-notify
+          - explicit
+          # NOTIFY messages are only sent for primary zones
+          - primary-only
+          # NOTIFY messages are sent when a zone the server is authoritative for changes
+          - 'true'
+          - 'yes'
+          # Do not send NOTIFY messages
+          - 'false'
+          - 'no'
+      bind9_packages:
+        description: List of packages required by bind9
+        type: list
+        elements: str
+        default:
+          - acl
+          - bind9
+          - bind9utils
+          - bind9-doc
+          - dnsutils
+      bind9_primaries:
+        description: Servers that zone transfer can be requested from
+        type: list
+        elements: str
+        default: []
+      bind9_qname_minimization:
+        description: QNAME minimization behavior
+        type: str
+        default: strict
+        choices:
+          # Reduce amount of exchanged data to increase privacy (as specified in RFC 7816)
+          - strict
+          # Fallback to non-minimazed on unexpected responses
+          - relaxed
+          # Do NOT use QNAME minimization
+          - disabled
+          - 'off'
+      bind9_queries_allowed_networks:
+        description: Networks allowed to query this DNS server
+        type: list
+        elements: str
+        default:
+          # IPv4 and IPv6 addresses of all network interfaces on the host
+          - localhost
+          # All IPv4 and IPv6 CIDR of all network interfaces on the host
+          - localnets
+      bind9_transfer_allowed_networks:
+        description:
+          - Networks allowed to request to transfer information from zones managed by this DNS servers.
+          - Ignored when O(bind9_allow_transfer=false).
+        type: list
+        elements: str
+        default:
+          # No networks allowed
+          - none
+      bind9_acls:
+        description: ACLs
+        type: list
+        elements: dict
+        default: []
+        options:
+          name:
+            description:
+              - ACL name
+            type: str
+          address_match_list:
+            description:
+              - A list of L(bind9 address match elements,https://bind9.readthedocs.io/en/stable/reference.html#term-address_match_element).
+            type: list
+            elements: str
+            default: []
+      bind9_zones:
+        description: Zones configuration
+        type: list
+        elements: dict
+        default: []
+        options:
+          name:
+            description: Zone name (also set in $ORIGIN namespace)
+            type: str
+          serial:
+            description:
+              - Must be between C(1) and C(4294967295)
+              - e.g., you can use C("{{ ansible_date_time.epoch }}")
+            type: int
+          default_ttl:
+            description:
+              - 'Default time-to-live (TTL) of the zone resource records (RR)'
+              - '(For the format used, refer to L(RFC 3339,https://datatracker.ietf.org/doc/html/rfc3339))'
+            type: str
+          soa_refresh:
+            description: Time interval before the zone should be refreshed
+            type: str
+          soa_retry:
+            description: Time interval that should elapse before a failed refresh should be retried
+            type: str
+          soa_expire:
+            description: Upper limit on the time interval that can elapse before the zone is no longer authoritative
+            type: str
+          soa_minimum:
+            description: The TTL of negative responses (requests for data not present in the DNS server for this zone)
+            type: str
+          transfer_allowed_networks:
+            description:
+              - Networks allowed to request to transfer information from this DNS server for this zones.
+              - Same format as O(bind9_acls.address_match_list).
+            type: list
+            elements: str
+            default:
+              - localhost
+              - localnets
+          ns_records:
+            description: Networks allowed to request to transfer information from this DNS server for this zone
+            type: list
+            elements: str
+          resource_records:
+            description: Resource records (RR) definitions
+            type: list
+            elements: dict
+            default: []
+            options:
+              label:
+                description: 'Label (aka: "owner-name", "left-hand name")'
+                # Can use "@" for $ORIGIN
+                type: str
+                required: true
+              ttl:
+                description: Override TTL for this RR
+                type: str
+              priority:
+                description: Priority used for MX records
+                type: int
+              type:
+                description: RR Type
+                type: str
+                required: true
+                choices:
+                  # IPv4 address
+                  - A
+                  # IPv6 address
+                  - AAAA
+                  # Certification Authority Authorization
+                  - CAA
+                  # Certificate record
+                  - CERT
+                  # Aliases
+                  - CNAME
+                  # Redirection
+                  - DNAME
+                  # Mail server
+                  - MX
+                  # Reverse lookup
+                  - PTR
+                  # Text notes
+                  - TXT
+                  # For NS use resource_records.ns_records
+                  # For DNSKEY, RRSIG, and NSEC check https://bind9.readthedocs.io/en/stable/chapter5.html#dnssec-kasp
+          include_text:
+            default: |
+              ; in case there is something you want to add
+              ; at the end of the zone file
+      bind9_zones_dir:
+        description: Directory containig the zones files
+        type: path
+        default: /etc/bind/zones

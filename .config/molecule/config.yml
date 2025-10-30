@@ -1,0 +1,54 @@
+---
+prerun: false
+
+ansible:
+  executor:
+    args:
+      ansible_playbook:
+        - -v
+
+dependency:
+  name: galaxy
+  enabled: true
+
+driver:
+  name: docker
+
+platforms:
+  - name: instance-${TOX_ENV_NAME}.molecule.test
+    host: instance1
+    image: debian:stable-slim
+    dockerfile: ../utils/Dockerfile.j2
+    privileged: false
+    cgroupns_mode: host
+    override_command: false
+    groups:
+      - containers
+    tmpfs:
+      - /run
+      - /tmp
+    capabilities:
+      - SYS_ADMIN
+    security_opts:
+      - seccomp=unconfined
+
+provisioner:
+  name: ansible
+  options:
+    verbose: true
+  config_options:
+    defaults:
+      deprecation_warnings: false
+
+scenario:
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - prepare
+    - converge
+    - verify
+    - idempotence
+    - verify
+    - cleanup
+    - destroy

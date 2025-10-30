@@ -1,7 +1,11 @@
 pytest
-pytest-ansible ~= 25.6
+pytest-ansible >= 25.6
 pytest-xdist ~= 3.8
-molecule ~= 25.7
-tox >= 4.29
-tox-extra>=2.2
+molecule >= 25.7
+molecule-plugins[docker]
+docker>=7.1.0
+netaddr>=1.3.0
+tox
+tox-extra
 semantic_version
+galaxy-importer
