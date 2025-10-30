@@ -24,7 +24,10 @@ jobs:
   unit-galaxy:
     uses: ansible/ansible-content-actions/.github/workflows/unit.yaml@main
   integration:
-    uses: ansible/ansible-content-actions/.github/workflows/integration.yaml@main
+    uses: ./.github/workflows/run-tox.yml
+    with:
+      command: uvx tox -f molecule --ansible --conf tox-ansible.ini
+      command_description: Run molecule
   all_green:
     if: ${{ always() }}
     needs:

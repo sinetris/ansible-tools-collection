@@ -1,0 +1,44 @@
+---
+name: Run tox command
+
+on:
+  workflow_call:
+    inputs:
+      command:
+        description: Command to run
+        default: uvx tox list --ansible --conf tox-ansible.ini
+        type: string
+      command_description:
+        description: Description of the command
+        default: Run tox command
+        type: string
+
+# Default to bash
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+          ref: "${{ github.event.pull_request.head.sha }}"
+          fetch-depth: 0
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version-default"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install tox and required dependencies
+        run: uv tool install tox --with tox-ansible,tox-docker,tox-extra,tox-uv
+
+      - name: ${{ inputs.command_description }}
+        run: ${{ inputs.command }}
