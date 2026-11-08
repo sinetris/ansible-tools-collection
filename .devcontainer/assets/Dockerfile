@@ -1,19 +1,15 @@
-ARG VARIANT=bookworm
+ARG VARIANT=trixie
 FROM mcr.microsoft.com/devcontainers/base:${VARIANT}
 
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update
 
 # Install dependencies needed to build Python and required libraries
-RUN apt-get -y install --no-install-recommends \
+RUN apt-get update && apt-get -y install \
+  --no-install-recommends \
   build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
   curl libonig-dev bash-completion libncursesw5-dev xz-utils tk-dev libxml2-dev \
-  libxmlsec1-dev libffi-dev liblzma-dev uidmap
-
-# Install other dependencies
-# Note: podman is required by molecule-plugins even when not used (bug)
-RUN apt-get -y install --no-install-recommends \
-  shellcheck podman gpg
+  libxmlsec1-dev libffi-dev liblzma-dev uidmap shellcheck gpg \
+  && rm -rf /var/lib/apt/lists/*
 
 ARG USERNAME=vscode
 
@@ -28,9 +24,12 @@ RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
 ENV PATH="$HOME/.local/bin/:$PATH"
 
-# Install uv
+# Install uv (Python package manager) using official uv Docker image
 ENV UV_INSTALL_DIR="$HOME/.local/bin"
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV UV_CACHE_DIR="$HOME/.cache/uv"
+RUN mkdir -p "${UV_CACHE_DIR}"
+COPY --from=ghcr.io/astral-sh/uv:latest /uv "${UV_INSTALL_DIR}/uv"
+COPY --from=ghcr.io/astral-sh/uv:latest /uvx "${UV_INSTALL_DIR}/uvx"
 
 # Enable shell autocompletion for uv amd uvx commands (for bash and zsh)
 RUN echo 'eval "$(uv generate-shell-completion bash)"' >> ~/.bashrc

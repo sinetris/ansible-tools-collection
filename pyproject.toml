@@ -11,3 +11,10 @@ line-length = 100
 addopts = ["-vvv", "-n", "2", "--log-level", "WARNING", "--color", "yes"]
 filterwarnings = ['ignore:AnsibleCollectionFinder has already been configured']
 testpaths = ["tests"]
+
+[tool.tox-ansible]
+skip = [
+    "py3.11",
+    "devel",
+    "milestone",
+]

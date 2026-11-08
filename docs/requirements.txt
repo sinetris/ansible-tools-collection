@@ -61,7 +61,7 @@ charset-normalizer==3.4.3
     # via requests
 click==8.3.0
     # via typer
-collection-prep @ git+https://github.com/ansible-network/collection_prep.git@da78082ea59b03ad16cd7dbee267f53e8ff50bb5
+collection-prep @ git+https://github.com/ansible-network/collection_prep.git@cfc5cb3069ebda0380781d94ca815e5c2f59b42f
     # via -r docs/requirements.in
 cryptography==46.0.1
     # via ansible-core

@@ -6,7 +6,7 @@ on:
     inputs:
       command:
         description: Command to run
-        default: uvx tox list --ansible --conf tox-ansible.ini
+        default: uvx tox list --ansible
         type: string
       command_description:
         description: Description of the command
