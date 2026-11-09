@@ -14,6 +14,7 @@ testpaths = ["tests"]
 
 [tool.tox-ansible]
 skip = [
+    "integration-",
     "py3.11",
     "devel",
     "milestone",

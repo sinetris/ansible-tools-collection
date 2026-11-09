@@ -161,6 +161,7 @@ Requirements:
 - git
 - [uv](https://docs.astral.sh/uv/) (to install Python and dependencies)
 - Python 3 (installed using `uv`)
+- [shellcheck](https://github.com/koalaman/shellcheck)
 
 ```sh
 # Clone the repository in a valid directory

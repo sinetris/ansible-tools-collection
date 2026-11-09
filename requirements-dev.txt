@@ -82,9 +82,7 @@ distlib==0.4.0
     #   ansible-sign
     #   virtualenv
 distro==1.9.0
-    # via
-    #   bindep
-    #   selinux
+    # via bindep
 docker==7.1.0
     # via
     #   -r requirements-test.in
@@ -225,7 +223,6 @@ pytest==8.4.2
     #   tox-ansible
 pytest-ansible==25.8.0
     # via
-    #   -r requirements-test.in
     #   ansible-dev-tools
     #   tox-ansible
 pytest-plus==0.8.1
@@ -280,10 +277,6 @@ rpds-py==0.27.1
     #   referencing
 ruamel-yaml==0.18.15
     # via ansible-lint
-ruamel-yaml-clib==0.2.12
-    # via ruamel-yaml
-selinux==0.3.0
-    # via molecule-plugins
 semantic-version==2.10.0
     # via
     #   -r requirements-test.in

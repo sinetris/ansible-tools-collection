@@ -10,6 +10,8 @@ ansible:
 dependency:
   name: galaxy
   enabled: true
+  options:
+    role-file: requirements.yml
 
 driver:
   name: docker
