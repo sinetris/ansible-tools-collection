@@ -209,9 +209,9 @@ uvx tox list --ansible
 # Run sanity tests for detected python/ansible environments
 uvx tox run -f sanity --ansible
 # Update dependencies
-uvx tox run -f deps --ansible
+uvx tox run -e deps --ansible
 # Run linter
-uvx tox run -f lint --ansible
+uvx tox run -e lint --ansible
 # Run all tests in parallel
 uvx tox -p all --ansible
 ```
@@ -253,12 +253,12 @@ _fragment_file='pollute_readme.yaml'
 echo "${_fragment_content:?}" > "changelogs/fragments/${_fragment_file:?}"
 # Validate the changelog fragments
 # note: add `--allow-dirty` to test changes not yet committed to git
-uvx tox -f changelogs-lint --ansible --allow-dirty
+uvx tox -e changelogs-lint --ansible --allow-dirty
 # Stage and commit changes for tox tests to work
 git add .
 git commit -m "Added a useless line in README.md"
 # Run linters
-uvx tox -f lint --ansible
+uvx tox -e lint --ansible
 # Run all tests in parallel
 uvx tox -p all --ansible
 # Push changes to your remote fork
@@ -286,7 +286,7 @@ For the example we will use the version `v1.0.0`.
 #### Create the new release changelogs
 
 ```sh
-uvx tox -f changelogs --ansible --allow-dirty
+uvx tox -e changelogs --ansible --allow-dirty
 ```
 
 #### Generate documentation
@@ -294,13 +294,13 @@ uvx tox -f changelogs --ansible --allow-dirty
 To update the documentation, run:
 
 ```sh
-uvx tox -f docs-update --ansible --allow-dirty
+uvx tox -e docs-update --ansible --allow-dirty
 ```
 
 If you want to inspect the documentation locally, you can generate html files running:
 
 ```sh
-uvx tox -f docs-build --ansible --allow-dirty
+uvx tox -e docs-build --ansible --allow-dirty
 ```
 
 To see a preview, open `docs/build/index.html` in a browser.

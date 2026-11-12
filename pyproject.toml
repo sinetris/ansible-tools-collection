@@ -16,6 +16,7 @@ testpaths = ["tests"]
 skip = [
     "integration-",
     "py3.11",
+    "py3.15",
     "devel",
     "milestone",
 ]

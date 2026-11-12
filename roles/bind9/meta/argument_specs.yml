@@ -224,7 +224,7 @@ argument_specs:
           transfer_allowed_networks:
             description:
               - Networks allowed to request to transfer information from this DNS server for this zones.
-              - Same format as O(bind9_acls.address_match_list).
+              - Same format as O(bind9_acls[].address_match_list).
             type: list
             elements: str
             default:

@@ -21,7 +21,7 @@ uv venv --allow-existing --python="$(cat .python-version-default)"
 source .venv/bin/activate
 
 # Install tox and required dependencies
-uv tool install tox --with tox-ansible,tox-docker,tox-extra,tox-uv
+uv tool install tox --with tox-ansible,tox-docker,tox-uv
 
 # Install pre-commit and pre-commit-uv
 uv tool install pre-commit --with pre-commit-uv --force-reinstall
