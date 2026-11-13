@@ -5,6 +5,8 @@
 profile: production
 exclude_paths:
   - .cache/
+  - .github
+  - .tox/
   - changelogs/.plugin-cache.yaml
   - changelogs/changelog.yaml
 # Enable checking of loop variable prefixes in roles

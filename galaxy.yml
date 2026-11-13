@@ -22,6 +22,7 @@ issues: https://github.com/sinetris/ansible-tools-collection/issues
 build_ignore:
   - .ansible
   - .gitignore
+  - .pytest_cache
   - .tmp
   - .tox
   - .venv
@@ -29,5 +30,6 @@ build_ignore:
   - "*.tar.gz"
   - ansible_collections
   - changelogs/.plugin-cache.yaml
+  - collections
   - docs/build
   - tests/output

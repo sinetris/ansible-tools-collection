@@ -16,8 +16,8 @@
     "PROJECT_WORKDIR": "${containerWorkspaceFolder}"
   },
   "mounts": [
-    "source=${devcontainerId}_cache_ansible_collections,target=${containerWorkspaceFolder}ansible_collections,type=volume",
     "source=${devcontainerId}_cache_ansible,target=${containerWorkspaceFolder}.ansible,type=volume",
+    "source=${devcontainerId}_cache_ansible_collections,target=${containerWorkspaceFolder}ansible_collections,type=volume",
     "source=${devcontainerId}_cache_tox,target=${containerWorkspaceFolder}.tox,type=volume",
     "source=${devcontainerId}_cache_venv,target=${containerWorkspaceFolder}.venv,type=volume",
     "source=${devcontainerId}_tmp_volume,target=/tmp,type=volume"
@@ -37,10 +37,6 @@
     "vscode": {
       "extensions": [
         "redhat.ansible",
-        "ms-python.flake8",
-        "ms-python.pylint",
-        "ms-python.python",
-        "ms-python.pylint",
         "takumii.markdowntable",
         "vscode-icons-team.vscode-icons",
         "yzhang.markdown-all-in-one"
@@ -62,7 +58,10 @@
   },
   "features": {
     "ghcr.io/jungaretti/features/make:1": {},
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {}
+    "ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:latest": {
+      "moby": false
+    },
+    "ghcr.io/devcontainers/features/python:latest": {}
   }
 }

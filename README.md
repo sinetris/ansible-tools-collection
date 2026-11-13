@@ -159,8 +159,9 @@ default    Running    aarch64    4       8GiB      100GiB    docker     192.168.
 Requirements:
 
 - git
-- Python 3 (installed using `pyenv`)
-- [pyenv](https://github.com/pyenv/pyenv)
+- [uv](https://docs.astral.sh/uv/) (to install Python and dependencies)
+- Python 3 (installed using `uv`)
+- [shellcheck](https://github.com/koalaman/shellcheck)
 
 ```sh
 # Clone the repository in a valid directory
@@ -170,18 +171,28 @@ cd "${MY_COLLECTIONS_PATH}"/sinetris
 git clone git@github.com:sinetris/ansible-tools-collection.git tools
 cd tools
 
-# Install Python 3 using pyenv
-pyenv install
+# Install Python 3 using uv
+uv venv --allow-existing --python="$(cat .python-version-default)"
 
-# Ensure we are using pyenv
-pyenv version
-# should show something like: 3.12.6 (set by PYENV_VERSION environment variable)
+# Activate Python environment
+source .venv/bin/activate
 
-# Update pip
-pip install --upgrade pip
+# Install tox and required dependencies
+uv tool install tox --with tox-ansible,tox-docker,tox-extra,tox-uv
 
-# Install development packages
-pip install -r requirements-dev.in
+# Install ansible-dev-tools and executables
+_dev_tools_exec=(
+  ansible-builder
+  ansible-core
+  ansible-creator
+  ansible-dev-environment
+  ansible-lint
+  ansible-sign
+  molecule
+  ansible-navigator
+)
+uv tool install ansible-dev-tools --with-executables-from \
+  "${_dev_tools_exec[0]}$(printf ",%s" "${_dev_tools_exec[@]:1}")"
 
 # Install collection requirements
 ansible-galaxy install -r requirements.yml
@@ -194,15 +205,15 @@ from the project root run:
 
 ```sh
 # List all tox available environments
-uvx tox list --ansible --conf tox-ansible.ini
+uvx tox list --ansible
 # Run sanity tests for detected python/ansible environments
-uvx tox run --ansible -f sanity --conf tox-ansible.ini
+uvx tox run -f sanity --ansible
 # Update dependencies
-uvx tox run -f deps --ansible --conf tox-ansible.ini
+uvx tox run -e deps --ansible
 # Run linter
-uvx tox run -f lint --ansible --conf tox-ansible.ini
+uvx tox run -e lint --ansible
 # Run all tests in parallel
-uvx tox -p all --ansible --conf tox-ansible.ini
+uvx tox -p all --ansible
 ```
 
 ### Propose Changes
@@ -242,14 +253,14 @@ _fragment_file='pollute_readme.yaml'
 echo "${_fragment_content:?}" > "changelogs/fragments/${_fragment_file:?}"
 # Validate the changelog fragments
 # note: add `--allow-dirty` to test changes not yet committed to git
-uvx tox -f changelogs-lint --ansible --conf tox-ansible.ini --allow-dirty
+uvx tox -e changelogs-lint --ansible --allow-dirty
 # Stage and commit changes for tox tests to work
 git add .
 git commit -m "Added a useless line in README.md"
 # Run linters
-uvx tox -f lint --ansible --conf tox-ansible.ini
+uvx tox -e lint --ansible
 # Run all tests in parallel
-uvx tox -p all --ansible --conf tox-ansible.ini
+uvx tox -p all --ansible
 # Push changes to your remote fork
 git push
 ```
@@ -275,7 +286,7 @@ For the example we will use the version `v1.0.0`.
 #### Create the new release changelogs
 
 ```sh
-uvx tox -f changelogs --ansible --conf tox-ansible.ini --allow-dirty
+uvx tox -e changelogs --ansible --allow-dirty
 ```
 
 #### Generate documentation
@@ -283,13 +294,13 @@ uvx tox -f changelogs --ansible --conf tox-ansible.ini --allow-dirty
 To update the documentation, run:
 
 ```sh
-uvx tox -f docs-update --ansible --conf tox-ansible.ini --allow-dirty
+uvx tox -e docs-update --ansible --allow-dirty
 ```
 
 If you want to inspect the documentation locally, you can generate html files running:
 
 ```sh
-uvx tox -f docs-build --ansible --conf tox-ansible.ini --allow-dirty
+uvx tox -e docs-build --ansible --allow-dirty
 ```
 
 To see a preview, open `docs/build/index.html` in a browser.
