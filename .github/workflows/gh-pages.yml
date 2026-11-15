@@ -33,25 +33,28 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           submodules: recursive
           fetch-depth: 0
 
-      - name: "Set up Python"
-        uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v7
         with:
           python-version-file: ".python-version-default"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v10
+
+      - name: Install ansible-dev-environment
+        run: uv tool install ansible-dev-environment
 
       - name: Install tox and required dependencies
         run: uv tool install tox --with tox-ansible,tox-docker,tox-extra,tox-uv
 
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Update documentation
         run: uvx tox -f docs-update --ansible
@@ -60,7 +63,7 @@ jobs:
         run: uvx tox -f docs-build --ansible
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ${{ inputs.documentation_html_path }}
 
@@ -74,4 +77,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

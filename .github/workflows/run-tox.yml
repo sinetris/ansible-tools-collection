@@ -23,19 +23,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           submodules: recursive
           ref: "${{ github.event.pull_request.head.sha }}"
           fetch-depth: 0
 
-      - name: "Set up Python"
-        uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v7
         with:
           python-version-file: ".python-version-default"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v10
+
+      - name: Install ansible-dev-environment
+        run: uv tool install ansible-dev-environment
 
       - name: Install tox and required dependencies
         run: uv tool install tox --with tox-ansible,tox-docker,tox-extra,tox-uv

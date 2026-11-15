@@ -35,7 +35,7 @@ jobs:
     outputs:
       collection_version: ${{ steps.get_galaxy_version.outputs.collection_version }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Extract version from galaxy.yml
         id: get_galaxy_version
         run: |
@@ -75,7 +75,7 @@ jobs:
     needs:
       - validate-files-version
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Extract version from branch name
         id: get_branch_version
         run: |
@@ -118,7 +118,7 @@ jobs:
       }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Show an error
         id: get_branch_version
         run: |
