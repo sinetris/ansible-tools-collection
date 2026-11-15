@@ -1,7 +1,7 @@
 ---
 name: Release sinetris.tools
 
-on:
+"on":
   release:
     types:
       - published

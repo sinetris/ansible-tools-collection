@@ -1,12 +1,16 @@
 ---
 - name: Testing PKI
   hosts: localhost
-  connection: local
   gather_facts: false
   tasks:
+    - name: Set _argument_spec
+      ansible.builtin.set_fact:
+        _argument_spec: "{{ (lookup('ansible.builtin.file', argument_specs_file) | from_yaml)['argument_specs'] }}"
+      vars:
+        argument_specs_file: "../../../roles/bind9/meta/argument_specs.yml"
     - name: Verify argument_specs
       ansible.builtin.validate_argument_spec:
-        argument_spec: "{{ (lookup('ansible.builtin.file', filename) | from_yaml)['argument_specs'][play_name]['options'] }}"
+        argument_spec: "{{ (lookup('ansible.builtin.file', argument_specs_file) | from_yaml)['argument_specs'][play_name]['options'] }}"
         provided_arguments:
           pki_action: prepare
           pki_ca_type: root-ca
@@ -14,4 +18,4 @@
           pki_project: demo
       vars:
         play_name: main
-        filename: "../../../roles/pki/meta/argument_specs.yml"
+        argument_specs_file: "../../../roles/pki/meta/argument_specs.yml"

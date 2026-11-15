@@ -11,3 +11,17 @@ line-length = 100
 addopts = ["-vvv", "-n", "2", "--log-level", "WARNING", "--color", "yes"]
 filterwarnings = ['ignore:AnsibleCollectionFinder has already been configured']
 testpaths = ["tests"]
+
+[tool.tox-ansible]
+# Skipping:
+#   'integration-*' -> Using molecule for integration tests
+#   py3.11, py3.12, devel, milestone -> Testing only latest 3 stable releases
+#   py3.15 -> Still smaller compatibility problems with some dependencies (will be added later)
+skip = [
+    "integration-",
+    "py3.11",
+    "py3.12",
+    "py3.15",
+    "devel",
+    "milestone",
+]

@@ -1,0 +1,9 @@
+---
+- name: Testing containers
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Assert that is working
+      ansible.builtin.assert:
+        that:
+          - nope == nope

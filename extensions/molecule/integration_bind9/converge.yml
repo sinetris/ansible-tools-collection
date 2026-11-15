@@ -1,0 +1,36 @@
+---
+- name: Testing Bind9 role argument_spec
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Set argument_spec vars
+      ansible.builtin.set_fact:
+        argument_specs: "{{ (lookup('ansible.builtin.file', argument_specs_file) | from_yaml)['argument_specs'] }}"
+        play_name: main
+      vars:
+        argument_specs_file: "../../../roles/bind9/meta/argument_specs.yml"
+    - name: Verify argument_specs defaults
+      ansible.builtin.validate_argument_spec:
+        argument_spec: "{{ argument_specs[play_name]['options'] }}"
+      vars:
+        play_name: main
+    - name: Verify that argument_specs with wrong arguments fails
+      ansible.builtin.validate_argument_spec:
+        argument_spec: "{{ argument_specs[play_name]['options'] }}"
+        provided_arguments:
+          bind9_dnssec_validation_mode: invalid"
+          bind9_notify: invalid
+          bind9_authoritative: nope
+      register: argument_spec_wrong_arguments_result
+      ignore_errors: true
+      failed_when:
+        - argument_spec_wrong_arguments_result is not failed
+      vars:
+        play_name: main
+    - name: Verify that bind9 argument_specs with wrong arguments fails and shows info in argument_errors
+      ansible.builtin.assert:
+        that:
+          - '"argument ''bind9_authoritative'' is of type str and we were unable to convert to bool" in argument_spec_wrong_arguments_result.msg'
+          - '"value of bind9_dnssec_validation_mode must be one of" in argument_spec_wrong_arguments_result.msg'
+          - '"value of bind9_notify must be one of" in argument_spec_wrong_arguments_result.msg'

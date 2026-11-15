@@ -3,6 +3,7 @@
 /.ansible
 /collections
 /ansible_collections
+/extensions/ansible_collections
 
 # VS Code
 
