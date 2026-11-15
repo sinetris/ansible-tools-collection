@@ -11,7 +11,7 @@ default_install_hook_types:
   - post-rewrite
 repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.13.7
+    rev: 0.13.8
     hooks:
       # Compile requirements
       - id: pip-compile
