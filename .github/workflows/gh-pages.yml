@@ -44,7 +44,7 @@ jobs:
           python-version-file: ".python-version-default"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v10
+        uses: astral-sh/setup-uv@v10.3.3
 
       - name: Install ansible-dev-environment
         run: uv tool install ansible-dev-environment
